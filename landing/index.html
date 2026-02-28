@@ -1,173 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ilowa — Cultural SocialFi Radio for the Global South</title>
-  <meta name="description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana. Prediction markets, live radio, elder wisdom, and community governance for 2.5 billion users." />
-  <meta property="og:title" content="Ilowa — Cultural SocialFi Radio" />
-  <meta property="og:description" content="Voice-native, AI-powered radio and prediction markets for the Global South. Built on Solana." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ilowa — Cultural SocialFi Radio Network for the Global South</title>
+
+  <!-- SEO & Open Graph -->
+  <meta name="description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana. Prediction markets, live radio, elder wisdom, and community governance for 2.5 billion users.">
+  <meta property="og:title" content="Ilowa — Cultural SocialFi Radio Network">
+  <meta property="og:description" content="Voice-native, AI-powered radio and prediction markets for the Global South. Built on Solana.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0A0A0F">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Icons (pinned version + SRI) -->
+  <script
+    src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"
+    integrity="sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq"
+    crossorigin="anonymous"
+    defer></script>
+
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ================================================================
+       RESET & TOKENS
+       ================================================================ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
-      --black: #0A0A0F;
-      --card: #111118;
-      --cyan: #00E5CC;
-      --gold: #FFD700;
-      --purple: #8B5CF6;
-      --text: #E8E6F0;
-      --muted: #8A8A9B;
-      --truth: #10B981;
-      --doubt: #EF4444;
+      --c-black:  #0A0A0F;
+      --c-card:   #111118;
+      --c-cyan:   #00E5CC;
+      --c-gold:   #FFD700;
+      --c-purple: #8B5CF6;
+      --c-text:   #E8E6F0;
+      --c-muted:  #8A8A9B;
+      --c-green:  #10B981;
+      --c-red:    #EF4444;
+      --c-blue:   #3B82F6;
+      --c-pink:   #F472B6;
+
+      --ff-body:    'Inter', -apple-system, sans-serif;
+      --ff-display: 'Sora', sans-serif;
+
+      --radius-sm:  10px;
+      --radius-md:  14px;
+      --radius-lg:  18px;
+      --radius-xl:  20px;
+      --radius-pill: 100px;
+
+      --glass-bg:     rgba(17, 17, 24, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-blur:   blur(16px);
     }
 
+    /* ================================================================
+       BASE
+       ================================================================ */
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--black);
-      color: var(--text);
+      font-family: var(--ff-body);
+      background: var(--c-black);
+      color: var(--c-text);
       line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; }
+
+    /* Skip-to-content (accessibility) */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .sr-only:focus {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      width: auto;
+      height: auto;
+      padding: 12px 24px;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+      background: var(--c-cyan);
+      color: var(--c-black);
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      z-index: 100000;
+    }
+
+    /* ================================================================
+       FILM GRAIN OVERLAY
+       ================================================================ */
     .grain {
-      position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
       opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* Shader canvases */
-    .shader-wrap {
-      position: absolute; inset: 0; z-index: 0;
-      overflow: hidden;
-    }
-    .shader-wrap canvas {
-      width: 100%; height: 100%;
-      display: block;
-      opacity: 0.7;
-    }
-
-    /* ─── Hero ─── */
-    .hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center;
-      padding: 60px 24px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero > *:not(.shader-wrap) { position: relative; z-index: 1; }
-
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(0,229,204,0.08);
-      border: 1px solid rgba(0,229,204,0.2);
-      border-radius: 100px;
-      padding: 8px 20px;
-      font-size: 13px; font-weight: 600;
-      color: var(--cyan);
-      margin-bottom: 32px;
-      letter-spacing: 0.5px;
-    }
-
-    .hero h1 {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(42px, 8vw, 80px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 .accent { color: var(--cyan); }
-    .hero h1 .gold   { color: var(--gold); }
-    .hero h1 .hue-purple { color: var(--purple); }
-    .hero h1 .hue-mix {
-      background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 40%, var(--gold) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .x-icon { width: 18px; height: 18px; display: inline-block; vertical-align: middle; fill: currentColor; }
-    .x-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: middle; fill: currentColor; }
-
-    .hero .subtitle {
-      font-size: clamp(16px, 2.5vw, 20px);
-      color: var(--muted);
-      max-width: 620px;
-      margin-bottom: 40px;
-    }
-
-    .cta-row {
-      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-    }
-
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 16px 32px;
-      border-radius: 14px;
-      font-family: 'Sora', sans-serif;
-      font-weight: 700; font-size: 15px;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer; border: none;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--cyan) 0%, #00c4b0 100%);
-      color: var(--black);
-      box-shadow: 0 0 30px rgba(0,229,204,0.35), 0 0 60px rgba(0,229,204,0.1);
-      position: relative; overflow: hidden;
-    }
-    .btn-primary::after {
-      content: '';
-      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
-      transform: translateX(-100%); transition: none;
-    }
-    .btn-primary:hover::after { transform: translateX(100%); transition: transform 0.6s ease; }
-    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,229,204,0.45), 0 0 100px rgba(0,229,204,0.15); }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(0,229,204,0.2);
-      box-shadow: 0 0 20px rgba(0,229,204,0.1);
-    }
-
-    .hero-stats {
-      display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; justify-content: center;
-    }
-    .stat { text-align: center; }
-    .stat-num {
-      font-family: 'Sora', sans-serif;
-      font-size: 28px; font-weight: 700;
-      color: var(--cyan);
-    }
-    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* ─── Features ─── */
-    .features {
-      padding: 100px 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
+    /* ================================================================
+       SHARED: SECTION TITLES
+       ================================================================ */
     .section-title {
-      font-family: 'Sora', sans-serif;
+      font-family: var(--ff-display);
       font-size: clamp(28px, 4vw, 40px);
       font-weight: 700;
       text-align: center;
@@ -176,11 +139,234 @@
 
     .section-sub {
       text-align: center;
-      color: var(--muted);
+      color: var(--c-muted);
       font-size: 16px;
       margin-bottom: 60px;
       max-width: 580px;
-      margin-left: auto; margin-right: auto;
+      margin-inline: auto;
+    }
+
+    /* ================================================================
+       SHARED: GLASSMORPHISM CARD
+       ================================================================ */
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+    }
+
+    /* ================================================================
+       SHADER CANVASES
+       ================================================================ */
+    .shader-wrap {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .shader-wrap canvas,
+    .wave-section canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0.7;
+    }
+
+    /* ================================================================
+       BUTTONS
+       ================================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--c-cyan), #00c4b0);
+      color: var(--c-black);
+      box-shadow:
+        0 0 30px rgba(0, 229, 204, 0.35),
+        0 0 60px rgba(0, 229, 204, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: linear-gradient(90deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+      transform: translateX(-100%);
+    }
+
+    .btn-primary:hover::after {
+      transform: translateX(100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn-primary:hover {
+      box-shadow:
+        0 0 50px rgba(0, 229, 204, 0.45),
+        0 0 100px rgba(0, 229, 204, 0.15);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--c-text);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(0, 229, 204, 0.2);
+      box-shadow: 0 0 20px rgba(0, 229, 204, 0.1);
+    }
+
+    /* ================================================================
+       X (TWITTER) ICON
+       ================================================================ */
+    .x-icon,
+    .x-icon-sm {
+      display: inline-block;
+      vertical-align: middle;
+      fill: currentColor;
+    }
+    .x-icon    { width: 18px; height: 18px; }
+    .x-icon-sm { width: 16px; height: 16px; }
+
+    /* ================================================================
+       ICON COLOUR TOKENS
+       ================================================================ */
+    .fi-cyan   { background: rgba(0, 229, 204, 0.1);   color: var(--c-cyan); }
+    .fi-purple { background: rgba(139, 92, 246, 0.1);   color: var(--c-purple); }
+    .fi-gold   { background: rgba(255, 215, 0, 0.1);    color: var(--c-gold); }
+    .fi-red    { background: rgba(239, 68, 68, 0.1);    color: var(--c-red); }
+    .fi-green  { background: rgba(16, 185, 129, 0.1);   color: var(--c-green); }
+    .fi-blue   { background: rgba(59, 130, 246, 0.1);   color: var(--c-blue); }
+    .fi-pink   { background: rgba(244, 114, 182, 0.1);  color: var(--c-pink); }
+
+    /* ================================================================
+       HERO
+       ================================================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero > *:not(.shader-wrap) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 204, 0.08);
+      border: 1px solid rgba(0, 229, 204, 0.2);
+      border-radius: var(--radius-pill);
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--c-cyan);
+      margin-bottom: 32px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(42px, 8vw, 80px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent { color: var(--c-cyan); }
+    .hero h1 .gold   { color: var(--c-gold); }
+
+    .hero h1 .hue-mix {
+      background: linear-gradient(135deg, var(--c-cyan) 0%, var(--c-purple) 40%, var(--c-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--c-muted);
+      max-width: 620px;
+      margin-bottom: 40px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 60px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .stat { text-align: center; }
+
+    .stat-num {
+      font-family: var(--ff-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--c-cyan);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--c-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ================================================================
+       FEATURES
+       ================================================================ */
+    .features {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
     .feature-grid {
@@ -190,56 +376,64 @@
     }
 
     .feature-card {
-      background: rgba(17,17,24,0.65);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
+      border-radius: var(--radius-lg);
       padding: 32px 28px;
-      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s, background 0.4s;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       position: relative;
       overflow: hidden;
+      transition:
+        border-color 0.4s ease,
+        transform 0.3s ease,
+        box-shadow 0.4s ease,
+        background 0.4s ease;
     }
+
     .feature-card::before {
       content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0,229,204,0.04) 0%, transparent 50%, rgba(139,92,246,0.04) 100%);
-      opacity: 0; transition: opacity 0.4s;
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 229, 204, 0.04), transparent 50%, rgba(139, 92, 246, 0.04));
+      opacity: 0;
+      transition: opacity 0.4s ease;
       pointer-events: none;
     }
+
     .feature-card:hover::before { opacity: 1; }
+
     .feature-card:hover {
-      border-color: rgba(0,229,204,0.3);
+      border-color: rgba(0, 229, 204, 0.3);
       transform: translateY(-4px);
-      box-shadow: 0 0 24px rgba(0,229,204,0.12), 0 0 60px rgba(139,92,246,0.06), inset 0 1px 0 rgba(255,255,255,0.06);
-      background: rgba(17,17,24,0.8);
+      box-shadow:
+        0 0 24px rgba(0, 229, 204, 0.12),
+        0 0 60px rgba(139, 92, 246, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      background: rgba(17, 17, 24, 0.8);
     }
 
     .feature-icon {
-      width: 48px; height: 48px;
+      width: 48px;
+      height: 48px;
       border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 18px;
     }
 
-    .feature-icon svg { width: 24px; height: 24px; }
-
-    .fi-cyan    { background: rgba(0,229,204,0.1); color: var(--cyan); }
-    .fi-purple  { background: rgba(139,92,246,0.1); color: var(--purple); }
-    .fi-gold    { background: rgba(255,215,0,0.1);  color: var(--gold); }
-    .fi-red     { background: rgba(239,68,68,0.1);  color: var(--doubt); }
-    .fi-green   { background: rgba(16,185,129,0.1); color: var(--truth); }
-    .fi-blue    { background: rgba(59,130,246,0.1);  color: #3B82F6; }
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+    }
 
     .feature-card h3 {
-      font-family: 'Sora', sans-serif;
-      font-size: 17px; font-weight: 700;
+      font-family: var(--ff-display);
+      font-size: 17px;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
     .feature-card p {
       font-size: 14px;
-      color: var(--muted);
+      color: var(--c-muted);
       line-height: 1.7;
     }
 
@@ -247,27 +441,34 @@
       display: inline-block;
       margin-top: 14px;
       padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 11px; font-weight: 600;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: 0.5px;
     }
 
-    .tag-solana { background: rgba(139,92,246,0.12); color: var(--purple); }
-    .tag-ai     { background: rgba(0,229,204,0.1);   color: var(--cyan); }
-    .tag-live   { background: rgba(239,68,68,0.1);    color: var(--doubt); }
-    .tag-social { background: rgba(255,215,0,0.1);    color: var(--gold); }
+    .tag-solana { background: rgba(139, 92, 246, 0.12); color: var(--c-purple); }
+    .tag-ai     { background: rgba(0, 229, 204, 0.1);   color: var(--c-cyan); }
+    .tag-live   { background: rgba(239, 68, 68, 0.1);    color: var(--c-red); }
+    .tag-social { background: rgba(255, 215, 0, 0.1);    color: var(--c-gold); }
 
-    /* ─── Tech stack with shader bg ─── */
+    /* ================================================================
+       TECH STACK
+       ================================================================ */
     .stack {
       padding: 80px 24px;
       position: relative;
       overflow: hidden;
     }
 
-    .stack > *:not(.shader-wrap) { position: relative; z-index: 1; }
+    .stack > *:not(.shader-wrap) {
+      position: relative;
+      z-index: 1;
+    }
 
     .stack-inner {
-      max-width: 900px; margin: 0 auto;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     .stack-grid {
@@ -278,34 +479,57 @@
     }
 
     .stack-item {
-      background: rgba(17,17,24,0.55);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
+      background: rgba(17, 17, 24, 0.55);
+      border-radius: var(--radius-md);
       padding: 20px;
       text-align: center;
-      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      transition:
+        border-color 0.4s ease,
+        transform 0.3s ease,
+        box-shadow 0.4s ease;
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
     }
+
     .stack-item:hover {
-      border-color: rgba(0,229,204,0.3);
+      border-color: rgba(0, 229, 204, 0.3);
       transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(0,229,204,0.1), 0 0 40px rgba(139,92,246,0.05), inset 0 1px 0 rgba(255,255,255,0.06);
+      box-shadow:
+        0 0 20px rgba(0, 229, 204, 0.1),
+        0 0 40px rgba(139, 92, 246, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .stack-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 10px;
     }
 
-    .stack-icon svg { width: 20px; height: 20px; }
+    .stack-icon svg {
+      width: 20px;
+      height: 20px;
+    }
 
-    .stack-item h4 { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; }
-    .stack-item p  { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .stack-item h4 {
+      font-family: var(--ff-display);
+      font-size: 14px;
+      font-weight: 700;
+    }
 
-    /* ─── Elders ─── */
+    .stack-item p {
+      font-size: 12px;
+      color: var(--c-muted);
+      margin-top: 4px;
+    }
+
+    /* ================================================================
+       ELDERS
+       ================================================================ */
     .elders {
       padding: 100px 24px;
       max-width: 1100px;
@@ -320,363 +544,488 @@
     }
 
     .elder-card {
-      background: rgba(17,17,24,0.65);
-      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
       padding: 24px 16px;
       text-align: center;
-      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      transition:
+        border-color 0.4s ease,
+        transform 0.3s ease,
+        box-shadow 0.4s ease;
     }
+
     .elder-card:hover {
-      border-color: rgba(0,229,204,0.25);
+      border-color: rgba(0, 229, 204, 0.25);
       transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(0,229,204,0.1), 0 0 40px rgba(139,92,246,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
+      box-shadow:
+        0 0 20px rgba(0, 229, 204, 0.1),
+        0 0 40px rgba(139, 92, 246, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .elder-avatar {
-      width: 56px; height: 56px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .elder-avatar svg { width: 28px; height: 28px; }
+    .elder-avatar svg {
+      width: 28px;
+      height: 28px;
+    }
 
-    .elder-card h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; }
-    .elder-card .region { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .elder-card h4 {
+      font-family: var(--ff-display);
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-    /* ─── Bottom wave ─── */
+    .elder-card .region {
+      font-size: 11px;
+      color: var(--c-muted);
+      margin-top: 4px;
+    }
+
+    /* ================================================================
+       WAVE SECTION
+       ================================================================ */
     .wave-section {
-      width: 100%; height: 280px;
-      position: relative; overflow: hidden;
+      width: 100%;
+      height: 280px;
+      position: relative;
+      overflow: hidden;
       margin-top: -1px;
     }
-    .wave-section canvas {
-      width: 100%; height: 100%;
-      display: block;
-      opacity: 0.7;
-    }
 
-    /* ─── Download ─── */
+    /* ================================================================
+       DOWNLOAD
+       ================================================================ */
     .download {
       padding: 80px 24px 100px;
       text-align: center;
-      background: radial-gradient(ellipse at 50% 100%, rgba(0,229,204,0.06) 0%, transparent 60%);
+      background: radial-gradient(ellipse at 50% 100%, rgba(0, 229, 204, 0.06), transparent 60%);
     }
 
-    .download .section-title { margin-bottom: 12px; }
+    .download .section-title {
+      margin-bottom: 12px;
+    }
 
     .download-note {
-      color: var(--muted); font-size: 14px; margin-bottom: 40px;
+      color: var(--c-muted);
+      font-size: 14px;
+      margin-bottom: 40px;
     }
 
     .download-card {
-      background: rgba(17,17,24,0.7);
-      border: 1px solid rgba(0,229,204,0.2);
-      border-radius: 20px;
+      background: rgba(17, 17, 24, 0.7);
+      border: 1px solid rgba(0, 229, 204, 0.2);
+      border-radius: var(--radius-xl);
       padding: 40px 32px;
       max-width: 480px;
       margin: 0 auto;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 0 30px rgba(0,229,204,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
-      transition: box-shadow 0.4s, border-color 0.4s;
+      box-shadow:
+        0 0 30px rgba(0, 229, 204, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition: box-shadow 0.4s ease, border-color 0.4s ease;
     }
+
     .download-card:hover {
-      border-color: rgba(0,229,204,0.35);
-      box-shadow: 0 0 40px rgba(0,229,204,0.15), 0 0 80px rgba(139,92,246,0.06), inset 0 1px 0 rgba(255,255,255,0.08);
+      border-color: rgba(0, 229, 204, 0.35);
+      box-shadow:
+        0 0 40px rgba(0, 229, 204, 0.15),
+        0 0 80px rgba(139, 92, 246, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
     .download-card h3 {
-      font-family: 'Sora', sans-serif;
-      font-size: 20px; font-weight: 700;
+      font-family: var(--ff-display);
+      font-size: 20px;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
     .download-card p {
-      color: var(--muted); font-size: 13px; margin-bottom: 24px;
+      color: var(--c-muted);
+      font-size: 13px;
+      margin-bottom: 24px;
     }
 
-    .download-card .btn { width: 100%; justify-content: center; }
+    .download-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
 
     .download-meta {
       margin-top: 20px;
-      font-size: 12px; color: var(--muted);
+      font-size: 12px;
+      color: var(--c-muted);
     }
 
-    /* ─── Footer ─── */
-    footer {
+    /* ================================================================
+       FOOTER
+       ================================================================ */
+    .site-footer {
       padding: 40px 24px;
       text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.04);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    footer p { font-size: 13px; color: var(--muted); }
-
-    footer a {
-      color: var(--cyan); text-decoration: none;
-      display: inline-flex; align-items: center; gap: 6px;
+    .site-footer p {
+      font-size: 13px;
+      color: var(--c-muted);
     }
 
     .footer-links {
-      display: flex; gap: 24px; justify-content: center;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
       margin-bottom: 16px;
     }
 
-    .footer-links svg { width: 16px; height: 16px; }
+    .footer-links a {
+      color: var(--c-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
+    .footer-links svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
     @media (max-width: 640px) {
-      .hero { padding: 40px 20px 60px; }
-      .hero-stats { gap: 24px; }
-      .cta-row { flex-direction: column; align-items: center; }
-      .btn { width: 100%; max-width: 300px; justify-content: center; }
-      .wave-section { height: 160px; }
+      .hero {
+        padding: 40px 20px 60px;
+      }
+
+      .hero-stats {
+        gap: 24px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+
+      .wave-section {
+        height: 160px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="grain"></div>
+  <!-- Accessibility: skip link -->
+  <a href="#main" class="sr-only">Skip to main content</a>
 
-  <!-- ═══ Hero with WebGL chromatic wave shader ═══ -->
-  <section class="hero">
-    <div class="shader-wrap"><canvas id="hero-shader"></canvas></div>
-    <div class="hero-badge">
-      <i data-lucide="hexagon" style="width:14px;height:14px"></i> Built on Solana
+  <!-- Film grain texture overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="hero" id="main" role="banner">
+    <div class="shader-wrap" aria-hidden="true">
+      <canvas id="hero-shader"></canvas>
     </div>
+
+    <div class="hero-badge">
+      <i data-lucide="hexagon"></i> Built on Solana
+    </div>
+
     <h1>
-      <span class="accent">Ilowa</span><br />
-      Cultural SocialFi<br />
+      <span class="accent">Ilowa</span><br>
+      Cultural SocialFi<br>
       <span class="gold">Radio</span> <span class="hue-mix">Network</span>
     </h1>
+
     <p class="subtitle">
-      Voice powered, AI guided radio and prediction markets built for the Global South.<br />
+      Voice powered, AI guided radio and prediction markets built for the Global South.<br>
       Nine regional Elders . Over a hundred languages. 2.5 billion voices . One Platform.
     </p>
+
     <div class="cta-row">
       <a href="https://expo.dev/artifacts/eas/nLM9fzKknptJhTu62jbLoy.apk" class="btn btn-primary" download>
-        <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
+        <i data-lucide="download"></i> Download APK
       </a>
-      <a href="https://x.com/bantubloomnwk" class="btn btn-secondary" target="_blank" rel="noopener">
-        <svg class="x-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> Follow Us
+      <a href="https://x.com/bantubloomnwk" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+        <svg class="x-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Follow Us
       </a>
     </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Regional Elders</div></div>
-      <div class="stat"><div class="stat-num">101+</div><div class="stat-label">Languages</div></div>
-      <div class="stat"><div class="stat-num">30k+</div><div class="stat-label">Radio Stations</div></div>
-      <div class="stat"><div class="stat-num">2.5B</div><div class="stat-label">Target Users</div></div>
+
+    <div class="hero-stats" role="list">
+      <div class="stat" role="listitem">
+        <div class="stat-num">9</div>
+        <div class="stat-label">Regional Elders</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="stat-num">101+</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="stat-num">30k+</div>
+        <div class="stat-label">Radio Stations</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="stat-num">2.5B</div>
+        <div class="stat-label">Target Users</div>
+      </div>
     </div>
   </section>
 
-  <!-- ═══ Features ═══ -->
-  <section class="features">
-    <h2 class="section-title">What Ilowa Does</h2>
+  <!-- ═══════════════════════════════════════════════════════════════
+       FEATURES
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="features" aria-labelledby="features-title">
+    <h2 class="section-title" id="features-title">What Ilowa Does</h2>
     <p class="section-sub">Everything your community needs in one app. Radio, markets, AI wisdom, governance, and more.</p>
 
     <div class="feature-grid">
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-red"><i data-lucide="radio"></i></div>
         <h3>Live Cultural Radio</h3>
         <p>Stream live radio through Livepeer HLS. Browse over 30,000 real stations sorted by region, and call in with voice recordings that get uploaded straight to IPFS.</p>
         <span class="feature-tag tag-live">LIVEPEER + IPFS</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-purple"><i data-lucide="bar-chart-3"></i></div>
         <h3>Prediction Markets</h3>
         <p>Create and place bets on cultural, crypto, sports, and political predictions. Everything runs on chain via Light Protocol, with optional shielded bets through Arcium for privacy.</p>
         <span class="feature-tag tag-solana">SOLANA ON-CHAIN</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-cyan"><i data-lucide="brain"></i></div>
         <h3>Elder AI Wisdom</h3>
         <p>Chat with your regional Elder, powered by Cohere Aya for deep cultural context and GLM-5 for reasoning. Even when you're offline, the local wisdom fallback has you covered.</p>
         <span class="feature-tag tag-ai">AYA + GLM-5</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-gold"><i data-lucide="music"></i></div>
         <h3>Audius Music Browser</h3>
         <p>Discover artists, check out supporter leaderboards, and tip creators with $AUDIO through OrbitFlare Blinks. Full artist profiles with every track listed.</p>
         <span class="feature-tag tag-social">AUDIUS + BLINKS</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-purple"><i data-lucide="ticket"></i></div>
         <h3>KYD Event Ticketing</h3>
         <p>Buy event tickets with SOL through KYD Labs. Tiered pricing, QR receipts, and shareable Blink links make it easy to get your crew involved.</p>
         <span class="feature-tag tag-solana">KYD PROTOCOL</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-gold"><i data-lucide="trophy"></i></div>
         <h3>Points and Loyalty</h3>
         <p>A Fibonacci tier XP system with early adopter badges like Genesis Elder and Pioneer Voice. Torque loyalty campaigns dish out real on chain rewards.</p>
         <span class="feature-tag tag-social">TORQUE + NILLION</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-green"><i data-lucide="vote"></i></div>
         <h3>Hybrid Governance</h3>
         <p>Community proposals with on chain voting. Elder weighted governance makes sure every region gets proper cultural representation.</p>
         <span class="feature-tag tag-solana">DAO + ELDER WEIGHT</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-blue"><i data-lucide="shield-check"></i></div>
         <h3>Privacy and Security</h3>
         <p>Elder Guardian recovery, social recovery, biometric authentication. Shielded bets through Arcium MXE, plus voice biometrics for identity verification.</p>
         <span class="feature-tag tag-ai">ARCIUM + LIGHT</span>
-      </div>
+      </article>
 
-      <div class="feature-card">
+      <article class="feature-card glass">
         <div class="feature-icon fi-cyan"><i data-lucide="mic"></i></div>
         <h3>AI Podcasts</h3>
         <p>Elder narrated podcast episodes generated with TTS. The content library covers crypto, culture, and community stories you can listen to right inside the app.</p>
         <span class="feature-tag tag-ai">ELDER TTS</span>
-      </div>
+      </article>
     </div>
   </section>
 
-  <!-- ═══ Tech Stack with plasma grid shader bg ═══ -->
-  <section class="stack">
-    <div class="shader-wrap"><canvas id="plasma-shader"></canvas></div>
+  <!-- ═══════════════════════════════════════════════════════════════
+       TECH STACK
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="stack" aria-labelledby="stack-title">
+    <div class="shader-wrap" aria-hidden="true">
+      <canvas id="plasma-shader"></canvas>
+    </div>
+
     <div class="stack-inner">
-      <h2 class="section-title">Tech Stack</h2>
+      <h2 class="section-title" id="stack-title">Tech Stack</h2>
       <p class="section-sub">Built on open protocols and decentralized infrastructure from the ground up.</p>
+
       <div class="stack-grid">
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-purple"><i data-lucide="zap"></i></div>
-          <h4>Solana</h4><p>Anchor smart contracts</p>
+          <h4>Solana</h4>
+          <p>Anchor smart contracts</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-cyan"><i data-lucide="smartphone"></i></div>
-          <h4>Expo / React Native</h4><p>Cross platform mobile</p>
+          <h4>Expo / React Native</h4>
+          <p>Cross platform mobile</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-green"><i data-lucide="bot"></i></div>
-          <h4>Cohere Aya</h4><p>Multilingual AI, 101 languages</p>
+          <h4>Cohere Aya</h4>
+          <p>Multilingual AI, 101 languages</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-cyan"><i data-lucide="cpu"></i></div>
-          <h4>GLM-5</h4><p>Deep reasoning engine</p>
+          <h4>GLM-5</h4>
+          <p>Deep reasoning engine</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-red"><i data-lucide="video"></i></div>
-          <h4>Livepeer</h4><p>Live radio streaming</p>
+          <h4>Livepeer</h4>
+          <p>Live radio streaming</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-blue"><i data-lucide="hard-drive"></i></div>
-          <h4>IPFS / Arweave</h4><p>Permanent storage</p>
+          <h4>IPFS / Arweave</h4>
+          <p>Permanent storage</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-gold"><i data-lucide="message-circle"></i></div>
-          <h4>XMTP</h4><p>Encrypted messaging</p>
+          <h4>XMTP</h4>
+          <p>Encrypted messaging</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-blue"><i data-lucide="lock"></i></div>
-          <h4>Arcium / Light</h4><p>Privacy layer</p>
+          <h4>Arcium / Light</h4>
+          <p>Privacy layer</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-purple"><i data-lucide="database"></i></div>
-          <h4>Nillion</h4><p>Blind data vault</p>
+          <h4>Nillion</h4>
+          <p>Blind data vault</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-gold"><i data-lucide="calendar"></i></div>
-          <h4>KYD Labs</h4><p>Event ticketing</p>
+          <h4>KYD Labs</h4>
+          <p>Event ticketing</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-red"><i data-lucide="headphones"></i></div>
-          <h4>Audius</h4><p>Music and artist coins</p>
+          <h4>Audius</h4>
+          <p>Music and artist coins</p>
         </div>
-        <div class="stack-item">
+        <div class="stack-item glass">
           <div class="stack-icon fi-green"><i data-lucide="link"></i></div>
-          <h4>OrbitFlare</h4><p>Solana Blinks</p>
+          <h4>OrbitFlare</h4>
+          <p>Solana Blinks</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ Elders ═══ -->
-  <section class="elders">
-    <h2 class="section-title">Meet the 9 Elders</h2>
+  <!-- ═══════════════════════════════════════════════════════════════
+       ELDERS
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="elders" aria-labelledby="elders-title">
+    <h2 class="section-title" id="elders-title">Meet the 9 Elders</h2>
     <p class="section-sub">Every region has its own cultural guide. An Elder who carries the community's wisdom, language, and traditions.</p>
+
     <div class="elder-grid">
-      <div class="elder-card">
+      <article class="elder-card glass">
         <div class="elder-avatar fi-cyan"><i data-lucide="user"></i></div>
         <h4>Baba Dee</h4>
         <div class="region">West Africa</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-purple"><i data-lucide="user"></i></div>
         <h4>Mama Zawadi</h4>
         <div class="region">East Africa</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-gold"><i data-lucide="user"></i></div>
         <h4>Gogo Thandi</h4>
         <div class="region">Southern Africa</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-red"><i data-lucide="user"></i></div>
         <h4>Don Esteban</h4>
         <div class="region">Latin America</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-green"><i data-lucide="user"></i></div>
         <h4>Lola Maria</h4>
         <div class="region">Southeast Asia</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-blue"><i data-lucide="user"></i></div>
         <h4>Dada Rajesh</h4>
         <div class="region">South Asia</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-gold"><i data-lucide="user"></i></div>
         <h4>Sitt Fatima</h4>
         <div class="region">MENA</div>
-      </div>
-      <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(244,114,182,0.1);color:#F472B6"><i data-lucide="user"></i></div>
+      </article>
+      <article class="elder-card glass">
+        <div class="elder-avatar fi-pink"><i data-lucide="user"></i></div>
         <h4>Tantie Rose</h4>
         <div class="region">Caribbean</div>
-      </div>
-      <div class="elder-card">
+      </article>
+      <article class="elder-card glass">
         <div class="elder-avatar fi-cyan"><i data-lucide="user"></i></div>
         <h4>Aunty Leilani</h4>
         <div class="region">Pacific Islands</div>
-      </div>
+      </article>
     </div>
   </section>
 
-  <!-- ═══ Wave shader at bottom ═══ -->
-  <div class="wave-section"><canvas id="wave-shader"></canvas></div>
+  <!-- ═══════════════════════════════════════════════════════════════
+       WAVE SHADER
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="wave-section" aria-hidden="true">
+    <canvas id="wave-shader"></canvas>
+  </div>
 
-  <!-- ═══ Download ═══ -->
-  <section class="download" id="download">
-    <h2 class="section-title">Try Ilowa</h2>
+  <!-- ═══════════════════════════════════════════════════════════════
+       DOWNLOAD
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="download" id="download" aria-labelledby="download-title">
+    <h2 class="section-title" id="download-title">Try Ilowa</h2>
     <p class="download-note">Android APK you can install directly on your device. No Play Store needed.</p>
+
     <div class="download-card">
       <h3>Ilowa v1.0.0</h3>
-      <p>Cultural SocialFi Radio for the Global South, 2026.</p>
+      <p>Cultural SocialFi Radio Network for the Global South, 2026.</p>
       <a href="https://expo.dev/artifacts/eas/nLM9fzKknptJhTu62jbLoy.apk" class="btn btn-primary" download>
-        <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
+        <i data-lucide="download"></i> Download APK
       </a>
-      <div class="download-meta">
-        Requires Android 8.0 or later. Around 50 MB. Runs on Solana Devnet.
-      </div>
+      <div class="download-meta">Requires Android 8.0 or later. Around 50 MB. Runs on Solana Devnet.</div>
     </div>
   </section>
 
-  <!-- ═══ Footer ═══ -->
-  <footer>
-    <div class="footer-links">
-      <a href="https://x.com/bantubloomnwk" target="_blank" rel="noopener">
-        <svg class="x-icon-sm" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="https://x.com/bantubloomnwk" target="_blank" rel="noopener noreferrer">
+        <svg class="x-icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X
       </a>
       <a href="#download">
         <i data-lucide="download"></i> Download
@@ -684,258 +1033,256 @@
       <a href="mailto:hello@ilowa.app">
         <i data-lucide="mail"></i> Contact
       </a>
-    </div>
-    <p>BantuBloomNetwork © 2026. Built with purpose for the Global South.</p>
+    </nav>
+    <p>BantuBloomNetwork &copy; 2026. Built with purpose for the Global South.</p>
   </footer>
 
+  <!-- ═══════════════════════════════════════════════════════════════
+       WEBGL SHADERS
+       ═══════════════════════════════════════════════════════════════ -->
   <script>
-    try { lucide.createIcons(); } catch(e) { console.warn('Lucide icons failed:', e); }
+    'use strict';
 
-    /* Helper: compile + link a WebGL program safely */
-    function mkProg(gl, vSrc, fSrc, tag) {
-      function sh(src, type) {
-        var s = gl.createShader(type);
-        gl.shaderSource(s, src);
-        gl.compileShader(s);
-        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-          console.error(tag + ' compile:', gl.getShaderInfoLog(s));
-          return null;
-        }
-        return s;
-      }
-      var v = sh(vSrc, gl.VERTEX_SHADER), f = sh(fSrc, gl.FRAGMENT_SHADER);
-      if (!v || !f) return null;
-      var p = gl.createProgram();
-      gl.attachShader(p, v);
-      gl.attachShader(p, f);
-      gl.linkProgram(p);
-      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-        console.error(tag + ' link:', gl.getProgramInfoLog(p));
+    /* ── Lucide icons ── */
+    try { lucide.createIcons(); } catch (e) { console.warn('[Lucide] Icon init failed:', e); }
+
+    /* ── Shared WebGL helpers ── */
+    function compileShader(gl, source, type, label) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error('[' + label + '] compile:', gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
         return null;
       }
-      return p;
+      return shader;
     }
 
-    try { (function() {
-      var canvas = document.getElementById('hero-shader');
-      if (!canvas) return;
-      var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-      if (!gl) return;
+    function createProgram(gl, vertSrc, fragSrc, label) {
+      const vert = compileShader(gl, vertSrc, gl.VERTEX_SHADER, label);
+      const frag = compileShader(gl, fragSrc, gl.FRAGMENT_SHADER, label);
+      if (!vert || !frag) return null;
 
-      var prog = mkProg(gl,
-        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
-        [
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vert);
+      gl.attachShader(prog, frag);
+      gl.linkProgram(prog);
+
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        console.error('[' + label + '] link:', gl.getProgramInfoLog(prog));
+        gl.deleteProgram(prog);
+        return null;
+      }
+      return prog;
+    }
+
+    function setupQuad(gl, prog) {
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+      const loc = gl.getAttribLocation(prog, 'a_position');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    function handleResize(canvas, gl) {
+      const dpr = Math.min(window.devicePixelRatio, 1.5);
+      canvas.width  = canvas.clientWidth  * dpr;
+      canvas.height = canvas.clientHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    const VERT = 'attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }';
+
+    /* ── Shader 1: Hero chromatic wave ── */
+    try {
+      (function initHeroShader() {
+        const canvas = document.getElementById('hero-shader');
+        if (!canvas) return;
+        const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+        if (!gl) return;
+
+        const frag = [
           'precision highp float;',
-          'uniform vec2 resolution;',
-          'uniform float time;',
-          'void main(){',
-          '  vec2 uv=(gl_FragCoord.xy*2.0-resolution)/min(resolution.x,resolution.y);',
-          '  float d=length(uv)*0.05;',
-          '  float r=0.05/abs(uv.y+sin((uv.x*(1.0+d)+time)*1.0)*0.5);',
-          '  float g=0.05/abs(uv.y+sin((uv.x+time)*1.0)*0.5);',
-          '  float b=0.05/abs(uv.y+sin((uv.x*(1.0-d)+time)*1.0)*0.5);',
-          '  gl_FragColor=vec4(r,g,b,1.0);',
+          'uniform vec2 u_resolution;',
+          'uniform float u_time;',
+          'void main() {',
+          '  vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution) / min(u_resolution.x, u_resolution.y);',
+          '  float d = length(uv) * 0.05;',
+          '  float r = 0.05 / abs(uv.y + sin((uv.x * (1.0 + d) + u_time)) * 0.5);',
+          '  float g = 0.05 / abs(uv.y + sin((uv.x + u_time)) * 0.5);',
+          '  float b = 0.05 / abs(uv.y + sin((uv.x * (1.0 - d) + u_time)) * 0.5);',
+          '  gl_FragColor = vec4(r, g, b, 1.0);',
           '}'
-        ].join('\n'), 'Hero');
-      if (!prog) return;
-      gl.useProgram(prog);
+        ].join('\n');
 
-      var buf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-      var loc = gl.getAttribLocation(prog, 'p');
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        const prog = createProgram(gl, VERT, frag, 'Hero');
+        if (!prog) return;
 
-      var uRes = gl.getUniformLocation(prog, 'resolution');
-      var uTime = gl.getUniformLocation(prog, 'time');
+        gl.useProgram(prog);
+        setupQuad(gl, prog);
 
-      function resize() {
-        var dpr = Math.min(window.devicePixelRatio, 1.5);
-        canvas.width = canvas.clientWidth * dpr;
-        canvas.height = canvas.clientHeight * dpr;
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      }
-      resize();
-      window.addEventListener('resize', resize);
+        const uRes  = gl.getUniformLocation(prog, 'u_resolution');
+        const uTime = gl.getUniformLocation(prog, 'u_time');
 
-      var t = 0;
-      (function draw() {
-        t += 0.01;
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.uniform2f(uRes, canvas.width, canvas.height);
-        gl.uniform1f(uTime, t);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(draw);
+        const onResize = function () { handleResize(canvas, gl); };
+        onResize();
+        window.addEventListener('resize', onResize);
+
+        let t = 0;
+        (function draw() {
+          t += 0.01;
+          gl.clearColor(0, 0, 0, 1);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.uniform2f(uRes, canvas.width, canvas.height);
+          gl.uniform1f(uTime, t);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          requestAnimationFrame(draw);
+        })();
       })();
-    })(); } catch(e) { console.error('Hero shader error:', e); }
+    } catch (e) { console.error('[Hero] Shader error:', e); }
 
+    /* ── Shader 2: Plasma grid ── */
+    try {
+      (function initPlasmaShader() {
+        const canvas = document.getElementById('plasma-shader');
+        if (!canvas) return;
+        const gl = canvas.getContext('webgl', { alpha: false });
+        if (!gl) return;
 
-    /*
-     * SHADER 2 — Tech stack plasma grid
-     */
-    try { (function() {
-      var canvas = document.getElementById('plasma-shader');
-      if (!canvas) return;
-      var gl = canvas.getContext('webgl', { alpha: false });
-      if (!gl) return;
+        const frag = [
+          'precision highp float;',
+          'uniform vec2 u_resolution;',
+          'uniform float u_time;',
+          'const float S = 0.2, gsw = 0.015, sc = 5.0;',
+          'const vec4 lc = vec4(0.4, 0.2, 0.8, 1.0);',
+          'const float mlw = 0.01, Mlw = 0.2, lsp = S, la = 1.0, lf = 0.2;',
+          'const float ws = 0.04, wf = 0.5, wa = 1.0, of2 = 0.5, os = 0.266;',
+          'const float mos = 0.6, Mos = 2.0;',
+          'float dSL(float p, float h, float t) { return smoothstep(h, 0.0, abs(p - t)); }',
+          'float dCL(float p, float h, float t) { return smoothstep(h + gsw, h, abs(p - t)); }',
+          'float rnd(float t) { return (cos(t) + cos(t * 1.3 + 1.3) + cos(t * 1.4 + 1.4)) / 3.0; }',
+          'float gpy(float x, float hf, float o) { return rnd(x * lf + u_time * lsp) * hf * la + o; }',
+          'void main() {',
+          '  vec2 uv = gl_FragCoord.xy / u_resolution.xy;',
+          '  vec2 sp = (gl_FragCoord.xy - u_resolution.xy / 2.0) / u_resolution.x * 2.0 * sc;',
+          '  float hf = 1.0 - (cos(uv.x * 6.28) * 0.5 + 0.5);',
+          '  float vf = 1.0 - (cos(uv.y * 6.28) * 0.5 + 0.5);',
+          '  sp.y += rnd(sp.x * wf + u_time * ws) * wa * (0.5 + hf);',
+          '  sp.x += rnd(sp.y * wf + u_time * ws + 2.0) * wa * hf;',
+          '  vec4 lines = vec4(0.0);',
+          '  for (int l = 0; l < 16; l++) {',
+          '    float ni = float(l) / 16.0;',
+          '    float ot = u_time * os, op = float(l) + sp.x * of2;',
+          '    float r = rnd(op + ot) * 0.5 + 0.5;',
+          '    float hw = mix(mlw, Mlw, r * hf) / 2.0;',
+          '    float off = rnd(op + ot * (1.0 + ni)) * mix(mos, Mos, hf);',
+          '    float lp = gpy(sp.x, hf, off);',
+          '    float ln = dSL(lp, hw, sp.y) / 2.0 + dCL(lp, hw * 0.15, sp.y);',
+          '    float cx = mod(float(l) + u_time * lsp, 25.0) - 12.0;',
+          '    float ci = smoothstep(0.01 + gsw, 0.01, length(sp - vec2(cx, gpy(cx, hf, off)))) * 4.0;',
+          '    lines += (ln + ci) * lc * r;',
+          '  }',
+          '  vec4 bg = mix(vec4(0.05, 0.04, 0.12, 1), vec4(0.12, 0.04, 0.2, 1), uv.x);',
+          '  bg *= vf; bg.a = 1.0; bg += lines;',
+          '  gl_FragColor = bg;',
+          '}'
+        ].join('\n');
 
-      var fragSrc = [
-        'precision highp float;',
-        'uniform vec2 iResolution;',
-        'uniform float iTime;',
-        'const float S=0.2,gsw=0.015,sc=5.0;',
-        'const vec4 lc=vec4(0.4,0.2,0.8,1.0);',
-        'const float mlw=0.01,Mlw=0.2,lsp=S,la=1.0,lf=0.2;',
-        'const float ws=0.04,wf=0.5,wa=1.0,of=0.5,os=0.266;',
-        'const float mos=0.6,Mos=2.0;',
-        'float dSL(float p,float h,float t){return smoothstep(h,0.0,abs(p-t));}',
-        'float dCL(float p,float h,float t){return smoothstep(h+gsw,h,abs(p-t));}',
-        'float rnd(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}',
-        'float gpy(float x,float hf,float o){return rnd(x*lf+iTime*lsp)*hf*la+o;}',
-        'void main(){',
-        '  vec2 uv=gl_FragCoord.xy/iResolution.xy;',
-        '  vec2 sp=(gl_FragCoord.xy-iResolution.xy/2.0)/iResolution.x*2.0*sc;',
-        '  float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);',
-        '  float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);',
-        '  sp.y+=rnd(sp.x*wf+iTime*ws)*wa*(0.5+hf);',
-        '  sp.x+=rnd(sp.y*wf+iTime*ws+2.0)*wa*hf;',
-        '  vec4 lines=vec4(0.0);',
-        '  for(int l=0;l<16;l++){',
-        '    float ni=float(l)/16.0;',
-        '    float ot=iTime*os,op=float(l)+sp.x*of;',
-        '    float r=rnd(op+ot)*0.5+0.5;',
-        '    float hw=mix(mlw,Mlw,r*hf)/2.0;',
-        '    float off=rnd(op+ot*(1.0+ni))*mix(mos,Mos,hf);',
-        '    float lp=gpy(sp.x,hf,off);',
-        '    float ln=dSL(lp,hw,sp.y)/2.0+dCL(lp,hw*0.15,sp.y);',
-        '    float cx=mod(float(l)+iTime*lsp,25.0)-12.0;',
-        '    float ci=smoothstep(0.01+gsw,0.01,length(sp-vec2(cx,gpy(cx,hf,off))))*4.0;',
-        '    lines+=(ln+ci)*lc*r;',
-        '  }',
-        '  vec4 bg=mix(vec4(0.05,0.04,0.12,1),vec4(0.12,0.04,0.2,1),uv.x);',
-        '  bg*=vf; bg.a=1.0; bg+=lines;',
-        '  gl_FragColor=bg;',
-        '}'
-      ].join('\n');
+        const prog = createProgram(gl, VERT, frag, 'Plasma');
+        if (!prog) return;
 
-      var prog = mkProg(gl,
-        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
-        fragSrc, 'Plasma');
-      if (!prog) return;
-      gl.useProgram(prog);
+        gl.useProgram(prog);
+        setupQuad(gl, prog);
 
-      var buf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-      var loc = gl.getAttribLocation(prog, 'p');
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        const uRes  = gl.getUniformLocation(prog, 'u_resolution');
+        const uTime = gl.getUniformLocation(prog, 'u_time');
 
-      var uRes = gl.getUniformLocation(prog, 'iResolution');
-      var uTime = gl.getUniformLocation(prog, 'iTime');
+        const onResize = function () { handleResize(canvas, gl); };
+        onResize();
+        window.addEventListener('resize', onResize);
 
-      function resize() {
-        var dpr = Math.min(window.devicePixelRatio, 1.5);
-        canvas.width = canvas.clientWidth * dpr;
-        canvas.height = canvas.clientHeight * dpr;
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      var t0 = Date.now();
-      (function draw() {
-        var sec = (Date.now() - t0) / 1000;
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.uniform2f(uRes, canvas.width, canvas.height);
-        gl.uniform1f(uTime, sec);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(draw);
+        const t0 = performance.now();
+        (function draw() {
+          const sec = (performance.now() - t0) * 0.001;
+          gl.clearColor(0, 0, 0, 1);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.uniform2f(uRes, canvas.width, canvas.height);
+          gl.uniform1f(uTime, sec);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          requestAnimationFrame(draw);
+        })();
       })();
-    })(); } catch(e) { console.error('Plasma shader error:', e); }
+    } catch (e) { console.error('[Plasma] Shader error:', e); }
 
+    /* ── Shader 3: Bottom wave ── */
+    try {
+      (function initWaveShader() {
+        const canvas = document.getElementById('wave-shader');
+        if (!canvas) return;
+        const gl = canvas.getContext('webgl', { alpha: true });
+        if (!gl) return;
 
-    /*
-     * SHADER 3 — Wave animation above download
-     */
-    try { (function() {
-      var canvas = document.getElementById('wave-shader');
-      if (!canvas) return;
-      var gl = canvas.getContext('webgl', { alpha: true });
-      if (!gl) return;
+        const frag = [
+          'precision highp float;',
+          'uniform float u_time;',
+          'uniform vec2 u_resolution;',
+          'float wave(float x, float freq, float speed, float amp) { return sin(x * freq + u_time * speed) * amp; }',
+          'void main() {',
+          '  vec2 uv = gl_FragCoord.xy / u_resolution;',
+          '  float w1 = wave(uv.x, 4.0, 1.2, 0.12) + wave(uv.x, 8.0, 0.8, 0.06);',
+          '  float w2 = wave(uv.x, 3.0, 0.9, 0.15) + wave(uv.x, 7.0, 1.5, 0.05);',
+          '  float w3 = wave(uv.x, 5.0, 1.6, 0.10) + wave(uv.x, 11.0, 2.0, 0.04);',
+          '  float w4 = wave(uv.x, 2.5, 0.7, 0.18) + wave(uv.x, 9.0, 1.1, 0.03);',
+          '  float w5 = wave(uv.x, 6.0, 2.2, 0.08) + wave(uv.x, 13.0, 0.6, 0.04);',
+          '  float l1 = smoothstep(0.025, 0.0, abs(uv.y - 0.5 + w1));',
+          '  float l2 = smoothstep(0.020, 0.0, abs(uv.y - 0.42 + w2));',
+          '  float l3 = smoothstep(0.018, 0.0, abs(uv.y - 0.58 + w3));',
+          '  float l4 = smoothstep(0.030, 0.0, abs(uv.y - 0.50 + w4));',
+          '  float l5 = smoothstep(0.015, 0.0, abs(uv.y - 0.48 + w5));',
+          '  float g1 = smoothstep(0.15, 0.0, abs(uv.y - 0.5 + w1)) * 0.15;',
+          '  float g2 = smoothstep(0.12, 0.0, abs(uv.y - 0.42 + w2)) * 0.10;',
+          '  vec3 c = vec3(0.0);',
+          '  c += vec3(0.0, 0.9, 0.8) * (l1 + g1);',
+          '  c += vec3(0.55, 0.36, 0.96) * (l2 + g2);',
+          '  c += vec3(1.0, 0.84, 0.0) * l3 * 0.7;',
+          '  c += vec3(0.0, 0.7, 0.65) * l4 * 0.5;',
+          '  c += vec3(0.6, 0.3, 0.9) * l5 * 0.6;',
+          '  float fill = smoothstep(0.5 + w1, 0.95, uv.y) * 0.06;',
+          '  c += vec3(0.0, 0.9, 0.8) * fill;',
+          '  float a = clamp(max(max(l1 + g1, l2 + g2), max(max(l3, l4), max(l5, fill))), 0.0, 1.0);',
+          '  gl_FragColor = vec4(c, a);',
+          '}'
+        ].join('\n');
 
-      var fragSrc = [
-        'precision highp float;',
-        'uniform float t;',
-        'uniform vec2 r;',
-        'float wave(float x,float freq,float speed,float amp){return sin(x*freq+t*speed)*amp;}',
-        'void main(){',
-        '  vec2 uv=gl_FragCoord.xy/r;',
-        '  float w1=wave(uv.x,4.0,1.2,0.12)+wave(uv.x,8.0,0.8,0.06);',
-        '  float w2=wave(uv.x,3.0,0.9,0.15)+wave(uv.x,7.0,1.5,0.05);',
-        '  float w3=wave(uv.x,5.0,1.6,0.10)+wave(uv.x,11.0,2.0,0.04);',
-        '  float w4=wave(uv.x,2.5,0.7,0.18)+wave(uv.x,9.0,1.1,0.03);',
-        '  float w5=wave(uv.x,6.0,2.2,0.08)+wave(uv.x,13.0,0.6,0.04);',
-        '  float l1=smoothstep(0.025,0.0,abs(uv.y-0.5+w1));',
-        '  float l2=smoothstep(0.020,0.0,abs(uv.y-0.42+w2));',
-        '  float l3=smoothstep(0.018,0.0,abs(uv.y-0.58+w3));',
-        '  float l4=smoothstep(0.030,0.0,abs(uv.y-0.50+w4));',
-        '  float l5=smoothstep(0.015,0.0,abs(uv.y-0.48+w5));',
-        '  float g1=smoothstep(0.15,0.0,abs(uv.y-0.5+w1))*0.15;',
-        '  float g2=smoothstep(0.12,0.0,abs(uv.y-0.42+w2))*0.10;',
-        '  vec3 c=vec3(0.0);',
-        '  c+=vec3(0.0,0.9,0.8)*(l1+g1);',
-        '  c+=vec3(0.55,0.36,0.96)*(l2+g2);',
-        '  c+=vec3(1.0,0.84,0.0)*l3*0.7;',
-        '  c+=vec3(0.0,0.7,0.65)*l4*0.5;',
-        '  c+=vec3(0.6,0.3,0.9)*l5*0.6;',
-        '  float fill=smoothstep(0.5+w1,0.95,uv.y)*0.06;',
-        '  c+=vec3(0.0,0.9,0.8)*fill;',
-        '  float a=clamp(max(max(l1+g1,l2+g2),max(max(l3,l4),max(l5,fill))),0.0,1.0);',
-        '  gl_FragColor=vec4(c,a);',
-        '}'
-      ].join('\n');
+        const prog = createProgram(gl, VERT, frag, 'Wave');
+        if (!prog) return;
 
-      var prog = mkProg(gl,
-        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
-        fragSrc, 'Wave');
-      if (!prog) return;
-      gl.useProgram(prog);
+        gl.useProgram(prog);
+        setupQuad(gl, prog);
 
-      var buf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-      var loc = gl.getAttribLocation(prog, 'p');
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        const uTime = gl.getUniformLocation(prog, 'u_time');
+        const uRes  = gl.getUniformLocation(prog, 'u_resolution');
 
-      var tLoc = gl.getUniformLocation(prog, 't');
-      var rLoc = gl.getUniformLocation(prog, 'r');
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        const onResize = function () { handleResize(canvas, gl); };
+        onResize();
+        window.addEventListener('resize', onResize);
 
-      function resize() {
-        var dpr = Math.min(window.devicePixelRatio, 1.5);
-        canvas.width = canvas.clientWidth * dpr;
-        canvas.height = canvas.clientHeight * dpr;
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      (function draw(now) {
-        gl.clearColor(0, 0, 0, 0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.uniform1f(tLoc, now * 0.001);
-        gl.uniform2f(rLoc, canvas.width, canvas.height);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(draw);
-      })(0);
-    })(); } catch(e) { console.error('Wave shader error:', e); }
+        (function draw(now) {
+          gl.clearColor(0, 0, 0, 0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.uniform1f(uTime, now * 0.001);
+          gl.uniform2f(uRes, canvas.width, canvas.height);
+          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          requestAnimationFrame(draw);
+        })(0);
+      })();
+    } catch (e) { console.error('[Wave] Shader error:', e); }
   </script>
 </body>
 </html>
