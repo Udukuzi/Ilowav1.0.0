@@ -48,6 +48,7 @@
     .shader-wrap canvas {
       width: 100%; height: 100%;
       display: block;
+      opacity: 0.7;
     }
 
     /* ─── Hero ─── */
@@ -312,6 +313,7 @@
     .wave-section canvas {
       width: 100%; height: 100%;
       display: block;
+      opacity: 0.7;
     }
 
     /* ─── Download ─── */
@@ -636,13 +638,14 @@
   </footer>
 
   <script>
-    try { lucide.createIcons(); } catch(e) { console.warn('Lucide icons failed:', e); }
+    /* Debug overlay — remove after fixing */
+    var _dbg = document.createElement('div');
+    _dbg.style.cssText = 'position:fixed;bottom:0;left:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:12px monospace;padding:8px;max-width:100%;white-space:pre-wrap;pointer-events:none;';
+    document.body.appendChild(_dbg);
+    function _log(m){ _dbg.textContent += m+'\n'; console.log(m); }
 
-    /*
-     * SHADER 1 — Hero background
-     * Chromatic light wave from the WebGLShader component (THREE.js ported to raw WebGL)
-     * Original: https://21st.dev/community/components/aliimam/web-gl-shader
-     */
+    try { lucide.createIcons(); _log('lucide: OK'); } catch(e) { _log('lucide: FAIL '+e.message); }
+
     /* Helper: compile + link a WebGL program safely */
     function mkProg(gl, vSrc, fSrc, tag) {
       function sh(src, type) {
@@ -656,23 +659,26 @@
         return s;
       }
       var v = sh(vSrc, gl.VERTEX_SHADER), f = sh(fSrc, gl.FRAGMENT_SHADER);
+      _log(tag+' vert:'+(v?'OK':'FAIL')+' frag:'+(f?'OK':'FAIL'));
       if (!v || !f) return null;
       var p = gl.createProgram();
       gl.attachShader(p, v);
       gl.attachShader(p, f);
       gl.linkProgram(p);
       if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-        console.error(tag + ' link:', gl.getProgramInfoLog(p));
+        _log(tag+' link: FAIL '+gl.getProgramInfoLog(p));
         return null;
       }
+      _log(tag+' link: OK');
       return p;
     }
 
     try { (function() {
       var canvas = document.getElementById('hero-shader');
-      if (!canvas) return;
+      if (!canvas) { _log('Hero: no canvas'); return; }
       var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-      if (!gl) return;
+      if (!gl) { _log('Hero: no WebGL'); return; }
+      _log('Hero: canvas '+canvas.clientWidth+'x'+canvas.clientHeight+' gl='+gl.getParameter(gl.RENDERER));
 
       var prog = mkProg(gl,
         'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
@@ -721,7 +727,8 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })();
-    })(); } catch(e) { console.error('Hero shader error:', e); }
+      _log('Hero: animating');
+    })(); } catch(e) { _log('Hero ERROR: '+e.message); }
 
 
     /*
@@ -729,9 +736,10 @@
      */
     try { (function() {
       var canvas = document.getElementById('plasma-shader');
-      if (!canvas) return;
+      if (!canvas) { _log('Plasma: no canvas'); return; }
       var gl = canvas.getContext('webgl', { alpha: false });
-      if (!gl) return;
+      if (!gl) { _log('Plasma: no WebGL'); return; }
+      _log('Plasma: canvas '+canvas.clientWidth+'x'+canvas.clientHeight);
 
       var fragSrc = [
         'precision highp float;',
@@ -807,7 +815,8 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })();
-    })(); } catch(e) { console.error('Plasma shader error:', e); }
+      _log('Plasma: animating');
+    })(); } catch(e) { _log('Plasma ERROR: '+e.message); }
 
 
     /*
@@ -815,9 +824,10 @@
      */
     try { (function() {
       var canvas = document.getElementById('wave-shader');
-      if (!canvas) return;
+      if (!canvas) { _log('Wave: no canvas'); return; }
       var gl = canvas.getContext('webgl', { alpha: true });
-      if (!gl) return;
+      if (!gl) { _log('Wave: no WebGL'); return; }
+      _log('Wave: canvas '+canvas.clientWidth+'x'+canvas.clientHeight);
 
       var fragSrc = [
         'precision highp float;',
@@ -887,7 +897,8 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })(0);
-    })(); } catch(e) { console.error('Wave shader error:', e); }
+      _log('Wave: animating');
+    })(); } catch(e) { _log('Wave ERROR: '+e.message); }
   </script>
 </body>
 </html>
