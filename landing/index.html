@@ -86,6 +86,15 @@
 
     .hero h1 .accent { color: var(--cyan); }
     .hero h1 .gold   { color: var(--gold); }
+    .hero h1 .hue-purple { color: var(--purple); }
+    .hero h1 .hue-mix {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 40%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .x-icon { width: 18px; height: 18px; display: inline-block; vertical-align: middle; fill: currentColor; }
+    .x-icon-sm { width: 16px; height: 16px; display: inline-block; vertical-align: middle; fill: currentColor; }
 
     .hero .subtitle {
       font-size: clamp(16px, 2.5vw, 20px);
@@ -112,18 +121,32 @@
     .btn:hover { transform: translateY(-2px); }
 
     .btn-primary {
-      background: var(--cyan);
+      background: linear-gradient(135deg, var(--cyan) 0%, #00c4b0 100%);
       color: var(--black);
-      box-shadow: 0 0 30px rgba(0,229,204,0.3);
+      box-shadow: 0 0 30px rgba(0,229,204,0.35), 0 0 60px rgba(0,229,204,0.1);
+      position: relative; overflow: hidden;
     }
-    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,229,204,0.4); }
+    .btn-primary::after {
+      content: '';
+      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+      transform: translateX(-100%); transition: none;
+    }
+    .btn-primary:hover::after { transform: translateX(100%); transition: transform 0.6s ease; }
+    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,229,204,0.45), 0 0 100px rgba(0,229,204,0.15); }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.04);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(0,229,204,0.2);
+      box-shadow: 0 0 20px rgba(0,229,204,0.1);
+    }
 
     .hero-stats {
       display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; justify-content: center;
@@ -167,16 +190,29 @@
     }
 
     .feature-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(17,17,24,0.65);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 32px 28px;
-      transition: border-color 0.3s, transform 0.3s;
+      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s, background 0.4s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
     }
-
+    .feature-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,229,204,0.04) 0%, transparent 50%, rgba(139,92,246,0.04) 100%);
+      opacity: 0; transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .feature-card:hover::before { opacity: 1; }
     .feature-card:hover {
-      border-color: rgba(0,229,204,0.2);
+      border-color: rgba(0,229,204,0.3);
       transform: translateY(-4px);
+      box-shadow: 0 0 24px rgba(0,229,204,0.12), 0 0 60px rgba(139,92,246,0.06), inset 0 1px 0 rgba(255,255,255,0.06);
+      background: rgba(17,17,24,0.8);
     }
 
     .feature-icon {
@@ -242,16 +278,20 @@
     }
 
     .stack-item {
-      background: rgba(17,17,24,0.85);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(17,17,24,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px;
       padding: 20px;
       text-align: center;
-      transition: border-color 0.3s;
-      backdrop-filter: blur(8px);
+      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
-
-    .stack-item:hover { border-color: rgba(0,229,204,0.2); }
+    .stack-item:hover {
+      border-color: rgba(0,229,204,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(0,229,204,0.1), 0 0 40px rgba(139,92,246,0.05), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
 
     .stack-icon {
       width: 40px; height: 40px;
@@ -280,16 +320,19 @@
     }
 
     .elder-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(17,17,24,0.65);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 16px;
       padding: 24px 16px;
       text-align: center;
-      transition: border-color 0.3s, transform 0.3s;
+      transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
     .elder-card:hover {
-      border-color: rgba(0,229,204,0.2);
+      border-color: rgba(0,229,204,0.25);
       transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(0,229,204,0.1), 0 0 40px rgba(139,92,246,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
     .elder-avatar {
@@ -330,12 +373,20 @@
     }
 
     .download-card {
-      background: var(--card);
-      border: 1px solid rgba(0,229,204,0.15);
+      background: rgba(17,17,24,0.7);
+      border: 1px solid rgba(0,229,204,0.2);
       border-radius: 20px;
       padding: 40px 32px;
       max-width: 480px;
       margin: 0 auto;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 0 30px rgba(0,229,204,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: box-shadow 0.4s, border-color 0.4s;
+    }
+    .download-card:hover {
+      border-color: rgba(0,229,204,0.35);
+      box-shadow: 0 0 40px rgba(0,229,204,0.15), 0 0 80px rgba(139,92,246,0.06), inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
     .download-card h3 {
@@ -397,18 +448,18 @@
     <h1>
       <span class="accent">Ilowa</span><br />
       Cultural SocialFi<br />
-      <span class="gold">Radio</span>
+      <span class="gold">Radio</span> <span class="hue-mix">Network</span>
     </h1>
     <p class="subtitle">
-      Voice powered, AI guided radio and prediction markets built for the Global South.
-      Nine regional Elders. Over a hundred languages. 2.5 billion voices, one platform.
+      Voice powered, AI guided radio and prediction markets built for the Global South.<br />
+      Nine regional Elders . Over a hundred languages. 2.5 billion voices . One Platform.
     </p>
     <div class="cta-row">
       <a href="/ilowa.apk" class="btn btn-primary" download>
         <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
       </a>
       <a href="https://x.com/bantubloomnwk" class="btn btn-secondary" target="_blank" rel="noopener">
-        <i data-lucide="twitter" style="width:18px;height:18px"></i> Follow Us
+        <svg class="x-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> Follow Us
       </a>
     </div>
     <div class="hero-stats">
@@ -625,7 +676,7 @@
   <footer>
     <div class="footer-links">
       <a href="https://x.com/bantubloomnwk" target="_blank" rel="noopener">
-        <i data-lucide="twitter"></i> Twitter / X
+        <svg class="x-icon-sm" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X
       </a>
       <a href="#download">
         <i data-lucide="download"></i> Download
@@ -638,13 +689,7 @@
   </footer>
 
   <script>
-    /* Debug overlay — remove after fixing */
-    var _dbg = document.createElement('div');
-    _dbg.style.cssText = 'position:fixed;bottom:0;left:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:12px monospace;padding:8px;max-width:100%;white-space:pre-wrap;pointer-events:none;';
-    document.body.appendChild(_dbg);
-    function _log(m){ _dbg.textContent += m+'\n'; console.log(m); }
-
-    try { lucide.createIcons(); _log('lucide: OK'); } catch(e) { _log('lucide: FAIL '+e.message); }
+    try { lucide.createIcons(); } catch(e) { console.warn('Lucide icons failed:', e); }
 
     /* Helper: compile + link a WebGL program safely */
     function mkProg(gl, vSrc, fSrc, tag) {
@@ -659,26 +704,23 @@
         return s;
       }
       var v = sh(vSrc, gl.VERTEX_SHADER), f = sh(fSrc, gl.FRAGMENT_SHADER);
-      _log(tag+' vert:'+(v?'OK':'FAIL')+' frag:'+(f?'OK':'FAIL'));
       if (!v || !f) return null;
       var p = gl.createProgram();
       gl.attachShader(p, v);
       gl.attachShader(p, f);
       gl.linkProgram(p);
       if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
-        _log(tag+' link: FAIL '+gl.getProgramInfoLog(p));
+        console.error(tag + ' link:', gl.getProgramInfoLog(p));
         return null;
       }
-      _log(tag+' link: OK');
       return p;
     }
 
     try { (function() {
       var canvas = document.getElementById('hero-shader');
-      if (!canvas) { _log('Hero: no canvas'); return; }
+      if (!canvas) return;
       var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-      if (!gl) { _log('Hero: no WebGL'); return; }
-      _log('Hero: canvas '+canvas.clientWidth+'x'+canvas.clientHeight+' gl='+gl.getParameter(gl.RENDERER));
+      if (!gl) return;
 
       var prog = mkProg(gl,
         'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
@@ -727,8 +769,7 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })();
-      _log('Hero: animating');
-    })(); } catch(e) { _log('Hero ERROR: '+e.message); }
+    })(); } catch(e) { console.error('Hero shader error:', e); }
 
 
     /*
@@ -736,10 +777,9 @@
      */
     try { (function() {
       var canvas = document.getElementById('plasma-shader');
-      if (!canvas) { _log('Plasma: no canvas'); return; }
+      if (!canvas) return;
       var gl = canvas.getContext('webgl', { alpha: false });
-      if (!gl) { _log('Plasma: no WebGL'); return; }
-      _log('Plasma: canvas '+canvas.clientWidth+'x'+canvas.clientHeight);
+      if (!gl) return;
 
       var fragSrc = [
         'precision highp float;',
@@ -815,8 +855,7 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })();
-      _log('Plasma: animating');
-    })(); } catch(e) { _log('Plasma ERROR: '+e.message); }
+    })(); } catch(e) { console.error('Plasma shader error:', e); }
 
 
     /*
@@ -824,10 +863,9 @@
      */
     try { (function() {
       var canvas = document.getElementById('wave-shader');
-      if (!canvas) { _log('Wave: no canvas'); return; }
+      if (!canvas) return;
       var gl = canvas.getContext('webgl', { alpha: true });
-      if (!gl) { _log('Wave: no WebGL'); return; }
-      _log('Wave: canvas '+canvas.clientWidth+'x'+canvas.clientHeight);
+      if (!gl) return;
 
       var fragSrc = [
         'precision highp float;',
@@ -897,8 +935,7 @@
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
       })(0);
-      _log('Wave: animating');
-    })(); } catch(e) { _log('Wave ERROR: '+e.message); }
+    })(); } catch(e) { console.error('Wave shader error:', e); }
   </script>
 </body>
 </html>
