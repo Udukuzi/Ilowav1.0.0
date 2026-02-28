@@ -10,7 +10,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -636,83 +636,71 @@
   </footer>
 
   <script>
-    lucide.createIcons();
+    try { lucide.createIcons(); } catch(e) { console.warn('Lucide icons failed:', e); }
 
     /*
      * SHADER 1 — Hero background
      * Chromatic light wave from the WebGLShader component (THREE.js ported to raw WebGL)
      * Original: https://21st.dev/community/components/aliimam/web-gl-shader
      */
-    (function heroWaveShader() {
-      var canvas = document.getElementById('hero-shader');
-      var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-      if (!gl) return;
-
-      var vertSrc = [
-        'attribute vec3 position;',
-        'void main() {',
-        '  gl_Position = vec4(position, 1.0);',
-        '}'
-      ].join('\n');
-
-      var fragSrc = [
-        'precision highp float;',
-        'uniform vec2 resolution;',
-        'uniform float time;',
-        'uniform float xScale;',
-        'uniform float yScale;',
-        'uniform float distortion;',
-        '',
-        'void main() {',
-        '  vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);',
-        '  float d = length(p) * distortion;',
-        '  float rx = p.x * (1.0 + d);',
-        '  float gx = p.x;',
-        '  float bx = p.x * (1.0 - d);',
-        '  float r = 0.05 / abs(p.y + sin((rx + time) * xScale) * yScale);',
-        '  float g = 0.05 / abs(p.y + sin((gx + time) * xScale) * yScale);',
-        '  float b = 0.05 / abs(p.y + sin((bx + time) * xScale) * yScale);',
-        '  gl_FragColor = vec4(r, g, b, 1.0);',
-        '}'
-      ].join('\n');
-
-      function compile(src, type) {
+    /* Helper: compile + link a WebGL program safely */
+    function mkProg(gl, vSrc, fSrc, tag) {
+      function sh(src, type) {
         var s = gl.createShader(type);
         gl.shaderSource(s, src);
         gl.compileShader(s);
         if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-          console.error('Shader err:', gl.getShaderInfoLog(s));
-          gl.deleteShader(s); return null;
+          console.error(tag + ' compile:', gl.getShaderInfoLog(s));
+          return null;
         }
         return s;
       }
+      var v = sh(vSrc, gl.VERTEX_SHADER), f = sh(fSrc, gl.FRAGMENT_SHADER);
+      if (!v || !f) return null;
+      var p = gl.createProgram();
+      gl.attachShader(p, v);
+      gl.attachShader(p, f);
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+        console.error(tag + ' link:', gl.getProgramInfoLog(p));
+        return null;
+      }
+      return p;
+    }
 
-      var prog = gl.createProgram();
-      gl.attachShader(prog, compile(vertSrc, gl.VERTEX_SHADER));
-      gl.attachShader(prog, compile(fragSrc, gl.FRAGMENT_SHADER));
-      gl.linkProgram(prog);
+    try { (function() {
+      var canvas = document.getElementById('hero-shader');
+      if (!canvas) return;
+      var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+      if (!gl) return;
+
+      var prog = mkProg(gl,
+        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
+        [
+          'precision highp float;',
+          'uniform vec2 resolution;',
+          'uniform float time;',
+          'void main(){',
+          '  vec2 uv=(gl_FragCoord.xy*2.0-resolution)/min(resolution.x,resolution.y);',
+          '  float d=length(uv)*0.05;',
+          '  float r=0.05/abs(uv.y+sin((uv.x*(1.0+d)+time)*1.0)*0.5);',
+          '  float g=0.05/abs(uv.y+sin((uv.x+time)*1.0)*0.5);',
+          '  float b=0.05/abs(uv.y+sin((uv.x*(1.0-d)+time)*1.0)*0.5);',
+          '  gl_FragColor=vec4(r,g,b,1.0);',
+          '}'
+        ].join('\n'), 'Hero');
+      if (!prog) return;
       gl.useProgram(prog);
 
-      var positions = new Float32Array([
-        -1, -1, 0,  1, -1, 0,  -1, 1, 0,
-         1, -1, 0, -1,  1, 0,   1, 1, 0
-      ]);
       var buf = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-      var posLoc = gl.getAttribLocation(prog, 'position');
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      var loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
       var uRes = gl.getUniformLocation(prog, 'resolution');
       var uTime = gl.getUniformLocation(prog, 'time');
-      var uXScale = gl.getUniformLocation(prog, 'xScale');
-      var uYScale = gl.getUniformLocation(prog, 'yScale');
-      var uDist = gl.getUniformLocation(prog, 'distortion');
-
-      gl.uniform1f(uXScale, 1.0);
-      gl.uniform1f(uYScale, 0.5);
-      gl.uniform1f(uDist, 0.05);
 
       function resize() {
         var dpr = Math.min(window.devicePixelRatio, 1.5);
@@ -724,155 +712,79 @@
       window.addEventListener('resize', resize);
 
       var t = 0;
-      function draw() {
+      (function draw() {
         t += 0.01;
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.uniform2f(uRes, canvas.width, canvas.height);
         gl.uniform1f(uTime, t);
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    })();
+      })();
+    })(); } catch(e) { console.error('Hero shader error:', e); }
 
 
     /*
-     * SHADER 2 — Tech stack section background
-     * Plasma grid with animated warp lines
-     * Original: https://21st.dev/community/components/minhxthanh/shader-background
+     * SHADER 2 — Tech stack plasma grid
      */
-    (function plasmaGridShader() {
+    try { (function() {
       var canvas = document.getElementById('plasma-shader');
+      if (!canvas) return;
       var gl = canvas.getContext('webgl', { alpha: false });
       if (!gl) return;
-
-      var vertSrc = [
-        'attribute vec4 aVertexPosition;',
-        'void main() {',
-        '  gl_Position = aVertexPosition;',
-        '}'
-      ].join('\n');
 
       var fragSrc = [
         'precision highp float;',
         'uniform vec2 iResolution;',
         'uniform float iTime;',
-        '',
-        'const float overallSpeed = 0.2;',
-        'const float gridSmoothWidth = 0.015;',
-        'const float axisWidth = 0.05;',
-        'const float majorLineWidth = 0.025;',
-        'const float minorLineWidth = 0.0125;',
-        'const float majorLineFrequency = 5.0;',
-        'const float minorLineFrequency = 1.0;',
-        'const vec4 gridColor = vec4(0.5);',
-        'const float scale = 5.0;',
-        'const vec4 lineColor = vec4(0.4, 0.2, 0.8, 1.0);',
-        'const float minLineWidth = 0.01;',
-        'const float maxLineWidth = 0.2;',
-        'const float lineSpeed = 1.0 * overallSpeed;',
-        'const float lineAmplitude = 1.0;',
-        'const float lineFrequency = 0.2;',
-        'const float warpSpeed = 0.2 * overallSpeed;',
-        'const float warpFrequency = 0.5;',
-        'const float warpAmplitude = 1.0;',
-        'const float offsetFrequency = 0.5;',
-        'const float offsetSpeed = 1.33 * overallSpeed;',
-        'const float minOffsetSpread = 0.6;',
-        'const float maxOffsetSpread = 2.0;',
-        'const int linesPerGroup = 16;',
-        '',
-        '#define drawSmoothLine(pos, halfWidth, t) smoothstep(halfWidth, 0.0, abs(pos - (t)))',
-        '#define drawCrispLine(pos, halfWidth, t) smoothstep(halfWidth + gridSmoothWidth, halfWidth, abs(pos - (t)))',
-        '#define drawPeriodicLine(freq, width, t) drawCrispLine(freq / 2.0, width, abs(mod(t, freq) - (freq) / 2.0))',
-        '#define drawCircle(pos, radius, coord) smoothstep(radius + gridSmoothWidth, radius, length(coord - (pos)))',
-        '',
-        'float drawGridLines(float axis) {',
-        '  return drawCrispLine(0.0, axisWidth, axis)',
-        '    + drawPeriodicLine(majorLineFrequency, majorLineWidth, axis)',
-        '    + drawPeriodicLine(minorLineFrequency, minorLineWidth, axis);',
-        '}',
-        '',
-        'float drawGrid(vec2 space) {',
-        '  return min(1.0, drawGridLines(space.x) + drawGridLines(space.y));',
-        '}',
-        '',
-        'float random(float t) {',
-        '  return (cos(t) + cos(t * 1.3 + 1.3) + cos(t * 1.4 + 1.4)) / 3.0;',
-        '}',
-        '',
-        'float getPlasmaY(float x, float horizontalFade, float offset) {',
-        '  return random(x * lineFrequency + iTime * lineSpeed) * horizontalFade * lineAmplitude + offset;',
-        '}',
-        '',
-        'void main() {',
-        '  vec2 fragCoord = gl_FragCoord.xy;',
-        '  vec4 fragColor;',
-        '  vec2 uv = fragCoord.xy / iResolution.xy;',
-        '  vec2 space = (fragCoord - iResolution.xy / 2.0) / iResolution.x * 2.0 * scale;',
-        '',
-        '  float horizontalFade = 1.0 - (cos(uv.x * 6.28) * 0.5 + 0.5);',
-        '  float verticalFade = 1.0 - (cos(uv.y * 6.28) * 0.5 + 0.5);',
-        '',
-        '  space.y += random(space.x * warpFrequency + iTime * warpSpeed) * warpAmplitude * (0.5 + horizontalFade);',
-        '  space.x += random(space.y * warpFrequency + iTime * warpSpeed + 2.0) * warpAmplitude * horizontalFade;',
-        '',
-        '  vec4 lines = vec4(0.0);',
-        '  vec4 bgColor1 = vec4(0.05, 0.04, 0.12, 1.0);',
-        '  vec4 bgColor2 = vec4(0.12, 0.04, 0.2, 1.0);',
-        '',
-        '  for(int l = 0; l < linesPerGroup; l++) {',
-        '    float normalizedLineIndex = float(l) / float(linesPerGroup);',
-        '    float offsetTime = iTime * offsetSpeed;',
-        '    float offsetPosition = float(l) + space.x * offsetFrequency;',
-        '    float rand = random(offsetPosition + offsetTime) * 0.5 + 0.5;',
-        '    float halfWidth = mix(minLineWidth, maxLineWidth, rand * horizontalFade) / 2.0;',
-        '    float offset = random(offsetPosition + offsetTime * (1.0 + normalizedLineIndex)) * mix(minOffsetSpread, maxOffsetSpread, horizontalFade);',
-        '    float linePosition = getPlasmaY(space.x, horizontalFade, offset);',
-        '    float line = drawSmoothLine(linePosition, halfWidth, space.y) / 2.0 + drawCrispLine(linePosition, halfWidth * 0.15, space.y);',
-        '',
-        '    float circleX = mod(float(l) + iTime * lineSpeed, 25.0) - 12.0;',
-        '    vec2 circlePosition = vec2(circleX, getPlasmaY(circleX, horizontalFade, offset));',
-        '    float circle = drawCircle(circlePosition, 0.01, space) * 4.0;',
-        '',
-        '    line = line + circle;',
-        '    lines += line * lineColor * rand;',
+        'const float S=0.2,gsw=0.015,sc=5.0;',
+        'const vec4 lc=vec4(0.4,0.2,0.8,1.0);',
+        'const float mlw=0.01,Mlw=0.2,lsp=S,la=1.0,lf=0.2;',
+        'const float ws=0.04,wf=0.5,wa=1.0,of=0.5,os=0.266;',
+        'const float mos=0.6,Mos=2.0;',
+        'float dSL(float p,float h,float t){return smoothstep(h,0.0,abs(p-t));}',
+        'float dCL(float p,float h,float t){return smoothstep(h+gsw,h,abs(p-t));}',
+        'float rnd(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.0;}',
+        'float gpy(float x,float hf,float o){return rnd(x*lf+iTime*lsp)*hf*la+o;}',
+        'void main(){',
+        '  vec2 uv=gl_FragCoord.xy/iResolution.xy;',
+        '  vec2 sp=(gl_FragCoord.xy-iResolution.xy/2.0)/iResolution.x*2.0*sc;',
+        '  float hf=1.0-(cos(uv.x*6.28)*0.5+0.5);',
+        '  float vf=1.0-(cos(uv.y*6.28)*0.5+0.5);',
+        '  sp.y+=rnd(sp.x*wf+iTime*ws)*wa*(0.5+hf);',
+        '  sp.x+=rnd(sp.y*wf+iTime*ws+2.0)*wa*hf;',
+        '  vec4 lines=vec4(0.0);',
+        '  for(int l=0;l<16;l++){',
+        '    float ni=float(l)/16.0;',
+        '    float ot=iTime*os,op=float(l)+sp.x*of;',
+        '    float r=rnd(op+ot)*0.5+0.5;',
+        '    float hw=mix(mlw,Mlw,r*hf)/2.0;',
+        '    float off=rnd(op+ot*(1.0+ni))*mix(mos,Mos,hf);',
+        '    float lp=gpy(sp.x,hf,off);',
+        '    float ln=dSL(lp,hw,sp.y)/2.0+dCL(lp,hw*0.15,sp.y);',
+        '    float cx=mod(float(l)+iTime*lsp,25.0)-12.0;',
+        '    float ci=smoothstep(0.01+gsw,0.01,length(sp-vec2(cx,gpy(cx,hf,off))))*4.0;',
+        '    lines+=(ln+ci)*lc*r;',
         '  }',
-        '',
-        '  fragColor = mix(bgColor1, bgColor2, uv.x);',
-        '  fragColor *= verticalFade;',
-        '  fragColor.a = 1.0;',
-        '  fragColor += lines;',
-        '  gl_FragColor = fragColor;',
+        '  vec4 bg=mix(vec4(0.05,0.04,0.12,1),vec4(0.12,0.04,0.2,1),uv.x);',
+        '  bg*=vf; bg.a=1.0; bg+=lines;',
+        '  gl_FragColor=bg;',
         '}'
       ].join('\n');
 
-      function compile(src, type) {
-        var s = gl.createShader(type);
-        gl.shaderSource(s, src);
-        gl.compileShader(s);
-        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-          console.error('Plasma shader err:', gl.getShaderInfoLog(s));
-          gl.deleteShader(s); return null;
-        }
-        return s;
-      }
+      var prog = mkProg(gl,
+        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
+        fragSrc, 'Plasma');
+      if (!prog) return;
+      gl.useProgram(prog);
 
-      var prog = gl.createProgram();
-      gl.attachShader(prog, compile(vertSrc, gl.VERTEX_SHADER));
-      gl.attachShader(prog, compile(fragSrc, gl.FRAGMENT_SHADER));
-      gl.linkProgram(prog);
-      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-        console.error('Plasma link err:', gl.getProgramInfoLog(prog));
-        return;
-      }
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      var loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-      var posBuf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-
-      var posLoc = gl.getAttribLocation(prog, 'aVertexPosition');
       var uRes = gl.getUniformLocation(prog, 'iResolution');
       var uTime = gl.getUniformLocation(prog, 'iTime');
 
@@ -885,104 +797,72 @@
       resize();
       window.addEventListener('resize', resize);
 
-      var startMs = Date.now();
-      function draw() {
-        var sec = (Date.now() - startMs) / 1000;
+      var t0 = Date.now();
+      (function draw() {
+        var sec = (Date.now() - t0) / 1000;
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.useProgram(prog);
         gl.uniform2f(uRes, canvas.width, canvas.height);
         gl.uniform1f(uTime, sec);
-        gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
-        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(posLoc);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    })();
+      })();
+    })(); } catch(e) { console.error('Plasma shader error:', e); }
 
 
     /*
      * SHADER 3 — Wave animation above download
-     * Layered flowing waves with cyan/purple/gold color mixing
-     * Inspired by: https://21st.dev/community/components/aliimam/wave-1
      */
-    (function bottomWaveShader() {
+    try { (function() {
       var canvas = document.getElementById('wave-shader');
+      if (!canvas) return;
       var gl = canvas.getContext('webgl', { alpha: true });
       if (!gl) return;
 
-      var vertSrc = 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
       var fragSrc = [
         'precision highp float;',
         'uniform float t;',
         'uniform vec2 r;',
-        '',
-        'float wave(float x, float freq, float speed, float amp) {',
-        '  return sin(x * freq + t * speed) * amp;',
-        '}',
-        '',
-        'float hash(float n) {',
-        '  return fract(sin(n) * 43758.5453);',
-        '}',
-        '',
-        'void main() {',
-        '  vec2 uv = gl_FragCoord.xy / r;',
-        '',
-        '  float w1 = wave(uv.x, 4.0, 1.2, 0.12) + wave(uv.x, 8.0, 0.8, 0.06);',
-        '  float w2 = wave(uv.x, 3.0, 0.9, 0.15) + wave(uv.x, 7.0, 1.5, 0.05);',
-        '  float w3 = wave(uv.x, 5.0, 1.6, 0.10) + wave(uv.x, 11.0, 2.0, 0.04);',
-        '  float w4 = wave(uv.x, 2.5, 0.7, 0.18) + wave(uv.x, 9.0, 1.1, 0.03);',
-        '  float w5 = wave(uv.x, 6.0, 2.2, 0.08) + wave(uv.x, 13.0, 0.6, 0.04);',
-        '',
-        '  float line1 = smoothstep(0.025, 0.0, abs(uv.y - 0.5 + w1));',
-        '  float line2 = smoothstep(0.020, 0.0, abs(uv.y - 0.42 + w2));',
-        '  float line3 = smoothstep(0.018, 0.0, abs(uv.y - 0.58 + w3));',
-        '  float line4 = smoothstep(0.030, 0.0, abs(uv.y - 0.50 + w4));',
-        '  float line5 = smoothstep(0.015, 0.0, abs(uv.y - 0.48 + w5));',
-        '',
-        '  float glow1 = smoothstep(0.15, 0.0, abs(uv.y - 0.5 + w1)) * 0.15;',
-        '  float glow2 = smoothstep(0.12, 0.0, abs(uv.y - 0.42 + w2)) * 0.10;',
-        '',
-        '  vec3 c = vec3(0.0);',
-        '  c += vec3(0.0, 0.9, 0.8) * (line1 + glow1);',
-        '  c += vec3(0.55, 0.36, 0.96) * (line2 + glow2);',
-        '  c += vec3(1.0, 0.84, 0.0) * line3 * 0.7;',
-        '  c += vec3(0.0, 0.7, 0.65) * line4 * 0.5;',
-        '  c += vec3(0.6, 0.3, 0.9) * line5 * 0.6;',
-        '',
-        '  float fill = smoothstep(0.5 + w1, 0.95, uv.y) * 0.06;',
-        '  c += vec3(0.0, 0.9, 0.8) * fill;',
-        '',
-        '  float a = max(max(line1 + glow1, line2 + glow2), max(max(line3, line4), max(line5, fill)));',
-        '  a = clamp(a, 0.0, 1.0);',
-        '  gl_FragColor = vec4(c, a);',
+        'float wave(float x,float freq,float speed,float amp){return sin(x*freq+t*speed)*amp;}',
+        'void main(){',
+        '  vec2 uv=gl_FragCoord.xy/r;',
+        '  float w1=wave(uv.x,4.0,1.2,0.12)+wave(uv.x,8.0,0.8,0.06);',
+        '  float w2=wave(uv.x,3.0,0.9,0.15)+wave(uv.x,7.0,1.5,0.05);',
+        '  float w3=wave(uv.x,5.0,1.6,0.10)+wave(uv.x,11.0,2.0,0.04);',
+        '  float w4=wave(uv.x,2.5,0.7,0.18)+wave(uv.x,9.0,1.1,0.03);',
+        '  float w5=wave(uv.x,6.0,2.2,0.08)+wave(uv.x,13.0,0.6,0.04);',
+        '  float l1=smoothstep(0.025,0.0,abs(uv.y-0.5+w1));',
+        '  float l2=smoothstep(0.020,0.0,abs(uv.y-0.42+w2));',
+        '  float l3=smoothstep(0.018,0.0,abs(uv.y-0.58+w3));',
+        '  float l4=smoothstep(0.030,0.0,abs(uv.y-0.50+w4));',
+        '  float l5=smoothstep(0.015,0.0,abs(uv.y-0.48+w5));',
+        '  float g1=smoothstep(0.15,0.0,abs(uv.y-0.5+w1))*0.15;',
+        '  float g2=smoothstep(0.12,0.0,abs(uv.y-0.42+w2))*0.10;',
+        '  vec3 c=vec3(0.0);',
+        '  c+=vec3(0.0,0.9,0.8)*(l1+g1);',
+        '  c+=vec3(0.55,0.36,0.96)*(l2+g2);',
+        '  c+=vec3(1.0,0.84,0.0)*l3*0.7;',
+        '  c+=vec3(0.0,0.7,0.65)*l4*0.5;',
+        '  c+=vec3(0.6,0.3,0.9)*l5*0.6;',
+        '  float fill=smoothstep(0.5+w1,0.95,uv.y)*0.06;',
+        '  c+=vec3(0.0,0.9,0.8)*fill;',
+        '  float a=clamp(max(max(l1+g1,l2+g2),max(max(l3,l4),max(l5,fill))),0.0,1.0);',
+        '  gl_FragColor=vec4(c,a);',
         '}'
       ].join('\n');
 
-      function compile(src, type) {
-        var s = gl.createShader(type);
-        gl.shaderSource(s, src);
-        gl.compileShader(s);
-        if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-          console.error('Wave err:', gl.getShaderInfoLog(s));
-        }
-        return s;
-      }
-
-      var prog = gl.createProgram();
-      gl.attachShader(prog, compile(vertSrc, gl.VERTEX_SHADER));
-      gl.attachShader(prog, compile(fragSrc, gl.FRAGMENT_SHADER));
-      gl.linkProgram(prog);
+      var prog = mkProg(gl,
+        'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}',
+        fragSrc, 'Wave');
+      if (!prog) return;
       gl.useProgram(prog);
 
       var buf = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-      var pLoc = gl.getAttribLocation(prog, 'p');
-      gl.enableVertexAttribArray(pLoc);
-      gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+      var loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
       var tLoc = gl.getUniformLocation(prog, 't');
       var rLoc = gl.getUniformLocation(prog, 'r');
@@ -999,16 +879,15 @@
       resize();
       window.addEventListener('resize', resize);
 
-      function draw(now) {
+      (function draw(now) {
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.uniform1f(tLoc, now * 0.001);
         gl.uniform2f(rLoc, canvas.width, canvas.height);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    })();
+      })(0);
+    })(); } catch(e) { console.error('Wave shader error:', e); }
   </script>
 </body>
 </html>
