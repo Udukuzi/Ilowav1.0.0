@@ -1096,53 +1096,170 @@
 
     const VERT = 'attribute vec2 a_position; void main() { gl_Position = vec4(a_position, 0.0, 1.0); }';
 
-    /* ── Shader 1: Hero chromatic wave ── */
+    /* ── Hero: Flow field particle system (Canvas2D) ── */
     try {
-      (function initHeroShader() {
+      (function initHeroFlowField() {
         const canvas = document.getElementById('hero-shader');
         if (!canvas) return;
-        const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-        if (!gl) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-        const frag = [
-          'precision highp float;',
-          'uniform vec2 u_resolution;',
-          'uniform float u_time;',
-          'void main() {',
-          '  vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution) / min(u_resolution.x, u_resolution.y);',
-          '  float d = length(uv) * 0.05;',
-          '  float r = 0.05 / abs(uv.y + sin((uv.x * (1.0 + d) + u_time)) * 0.5);',
-          '  float g = 0.05 / abs(uv.y + sin((uv.x + u_time)) * 0.5);',
-          '  float b = 0.05 / abs(uv.y + sin((uv.x * (1.0 - d) + u_time)) * 0.5);',
-          '  gl_FragColor = vec4(r, g, b, 1.0);',
-          '}'
-        ].join('\n');
+        /* Brand palette for particles */
+        const PALETTE = [
+          { r: 0,   g: 229, b: 204 },
+          { r: 139, g: 92,  b: 246 },
+          { r: 255, g: 215, b: 0   },
+          { r: 0,   g: 180, b: 170 },
+          { r: 120, g: 60,  b: 220 },
+        ];
 
-        const prog = createProgram(gl, VERT, frag, 'Hero');
-        if (!prog) return;
+        const PARTICLE_COUNT = 700;
+        const TRAIL_OPACITY  = 0.08;
+        const SPEED          = 1.0;
+        const MOUSE_RADIUS   = 160;
 
-        gl.useProgram(prog);
-        setupQuad(gl, prog);
+        let width  = 0;
+        let height = 0;
+        let mouse  = { x: -9999, y: -9999 };
+        let particles = [];
+        let frameId;
 
-        const uRes  = gl.getUniformLocation(prog, 'u_resolution');
-        const uTime = gl.getUniformLocation(prog, 'u_time');
+        /* Lightweight hash-based noise (no external lib) */
+        function noise2d(x, y) {
+          const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+          return n - Math.floor(n);
+        }
 
-        const onResize = function () { handleResize(canvas, gl); };
-        onResize();
-        window.addEventListener('resize', onResize);
+        function flowAngle(px, py, time) {
+          const scale  = 0.003;
+          const scale2 = 0.006;
+          const n1 = noise2d(px * scale + time * 0.15, py * scale);
+          const n2 = noise2d(px * scale2 - time * 0.1, py * scale2 + time * 0.08);
+          return (n1 + n2 * 0.5) * Math.PI * 4;
+        }
 
-        let t = 0;
-        (function draw() {
-          t += 0.01;
-          gl.clearColor(0, 0, 0, 1);
-          gl.clear(gl.COLOR_BUFFER_BIT);
-          gl.uniform2f(uRes, canvas.width, canvas.height);
-          gl.uniform1f(uTime, t);
-          gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-          requestAnimationFrame(draw);
-        })();
+        /* Particle factory */
+        function createParticle() {
+          const c = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+          return {
+            x:    Math.random() * width,
+            y:    Math.random() * height,
+            vx:   0,
+            vy:   0,
+            age:  0,
+            life: Math.random() * 240 + 120,
+            cr:   c.r,
+            cg:   c.g,
+            cb:   c.b,
+          };
+        }
+
+        function resetParticle(p) {
+          const c = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+          p.x    = Math.random() * width;
+          p.y    = Math.random() * height;
+          p.vx   = 0;
+          p.vy   = 0;
+          p.age  = 0;
+          p.life = Math.random() * 240 + 120;
+          p.cr   = c.r;
+          p.cg   = c.g;
+          p.cb   = c.b;
+        }
+
+        /* Sizing */
+        function resize() {
+          const container = canvas.parentElement;
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width  = container.clientWidth;
+          height = container.clientHeight;
+          canvas.width  = width * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width  = width + 'px';
+          canvas.style.height = height + 'px';
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          /* Re-seed particles on resize */
+          particles = [];
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(createParticle());
+          }
+        }
+
+        /* Draw loop */
+        let time = 0;
+        function draw() {
+          time += 0.004 * SPEED;
+
+          /* Trail fade — semi-transparent dark rect over previous frame */
+          ctx.fillStyle = 'rgba(10, 10, 15, ' + TRAIL_OPACITY + ')';
+          ctx.fillRect(0, 0, width, height);
+
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            /* Flow field force */
+            const angle = flowAngle(p.x, p.y, time);
+            p.vx += Math.cos(angle) * 0.18 * SPEED;
+            p.vy += Math.sin(angle) * 0.18 * SPEED;
+
+            /* Mouse repulsion */
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MOUSE_RADIUS && dist > 0) {
+              const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+              p.vx -= (dx / dist) * force * 2.5;
+              p.vy -= (dy / dist) * force * 2.5;
+            }
+
+            /* Integrate */
+            p.x  += p.vx;
+            p.y  += p.vy;
+            p.vx *= 0.94;
+            p.vy *= 0.94;
+
+            /* Aging */
+            p.age++;
+            if (p.age > p.life) resetParticle(p);
+
+            /* Wrap */
+            if (p.x < 0)      p.x += width;
+            if (p.x > width)   p.x -= width;
+            if (p.y < 0)      p.y += height;
+            if (p.y > height)  p.y -= height;
+
+            /* Draw — fade in/out over lifetime */
+            const lifeFrac = p.age / p.life;
+            const alpha = 1.0 - Math.abs(lifeFrac - 0.5) * 2.0;
+            ctx.globalAlpha = Math.max(0, alpha * 0.85);
+            ctx.fillStyle = 'rgb(' + p.cr + ',' + p.cg + ',' + p.cb + ')';
+            ctx.fillRect(p.x, p.y, 1.5, 1.5);
+          }
+
+          ctx.globalAlpha = 1.0;
+          frameId = requestAnimationFrame(draw);
+        }
+
+        /* Events */
+        function onMouseMove(e) {
+          const rect = canvas.getBoundingClientRect();
+          mouse.x = e.clientX - rect.left;
+          mouse.y = e.clientY - rect.top;
+        }
+        function onMouseLeave() {
+          mouse.x = -9999;
+          mouse.y = -9999;
+        }
+
+        resize();
+        draw();
+
+        window.addEventListener('resize', resize);
+        canvas.parentElement.addEventListener('mousemove', onMouseMove);
+        canvas.parentElement.addEventListener('mouseleave', onMouseLeave);
       })();
-    } catch (e) { console.error('[Hero] Shader error:', e); }
+    } catch (e) { console.error('[Hero] Flow field error:', e); }
 
     /* ── Shader 2: Plasma grid ── */
     try {
