@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ilowa — Cultural SocialFi Radio Network for the Global South</title>
 
-  <!-- SEO & Open Graph -->
   <meta name="description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana. Prediction markets, live radio, elder wisdom, and community governance for 2.5 billion users.">
   <meta property="og:title" content="Ilowa — Cultural SocialFi Radio Network">
   <meta property="og:description" content="Voice-native, AI-powered radio and prediction markets for the Global South. Built on Solana.">
@@ -13,16 +12,13 @@
   <meta name="theme-color" content="#0A0A0F">
   <meta name="color-scheme" content="dark">
 
-  <!-- Security -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Icons (pinned version + SRI) -->
   <script
     src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"
     integrity="sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq"
@@ -171,15 +167,11 @@
   </style>
 </head>
 <body>
-  <!-- Accessibility: skip link -->
   <a href="#main" class="sr-only">Skip to main content</a>
 
-  <!-- Film grain texture overlay -->
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       HERO
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Hero -->
   <section class="hero" id="main" role="banner">
     <div class="shader-wrap" aria-hidden="true">
       <canvas id="hero-shader"></canvas>
@@ -230,9 +222,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       FEATURES
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Features -->
   <section class="features" aria-labelledby="features-title">
     <h2 class="section-title" id="features-title">What Ilowa Does</h2>
     <p class="section-sub">Everything your community needs in one app. Radio, markets, AI wisdom, governance, and more.</p>
@@ -303,9 +293,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       TECH STACK
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Stack -->
   <section class="stack" aria-labelledby="stack-title">
     <div class="shader-wrap" aria-hidden="true">
       <canvas id="plasma-shader"></canvas>
@@ -380,9 +368,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       ELDERS
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Elders -->
   <section class="elders" aria-labelledby="elders-title">
     <h2 class="section-title" id="elders-title">Meet the 9 Elders</h2>
     <p class="section-sub">Every region has its own cultural guide. An Elder who carries the community's wisdom, language, and traditions.</p>
@@ -436,16 +422,12 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       WAVE SHADER
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Wave -->
   <div class="wave-section" aria-hidden="true">
     <canvas id="wave-shader"></canvas>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       DOWNLOAD
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Download -->
   <section class="download" id="download" aria-labelledby="download-title">
     <h2 class="section-title" id="download-title">Try Ilowa</h2>
     <p class="download-note">Android APK you can install directly on your device. No Play Store needed.</p>
@@ -460,9 +442,7 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       FOOTER
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Footer -->
   <footer class="site-footer">
     <nav class="footer-links" aria-label="Footer">
       <a href="https://x.com/bantubloomnwk" target="_blank" rel="noopener noreferrer">
@@ -479,9 +459,7 @@
     <p>BantuBloomNetwork &copy; 2026. Built with purpose for the Global South.</p>
   </footer>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       WEBGL SHADERS
-       ═══════════════════════════════════════════════════════════════ -->
+  <!-- Shaders -->
   <script>
     'use strict';
 
@@ -559,50 +537,55 @@
           '  vec2 p=(uv-.5)*vec2(ar,1.);',
           '  vec2 mp=(u_mouse/u_res-.5)*vec2(ar,1.);',
           '  float md=length(p-mp);',
-          '  float mf=smoothstep(.35,0.,md)*.25;',
+          '  float mf=smoothstep(.45,0.,md);',
+          /* Mouse warp — displace flow coordinates near cursor for smoke distortion */
+          '  vec2 mdir=normalize(p-mp+.001);',
+          '  vec2 warp=mdir*mf*.35*sin(md*20.-u_t*3.);',
+          '  vec2 wp=p+warp;',
           /* THz-scale high-freq wave field with flow distortion */
-          '  vec2 q=vec2(fbm(p*3.+u_t*.12),fbm(p*3.+vec2(5.2,1.3)+u_t*.1));',
-          '  vec2 r=vec2(fbm(p*3.+4.*q+vec2(1.7,9.2)+u_t*.08),fbm(p*3.+4.*q+vec2(8.3,2.8)+u_t*.06));',
+          '  vec2 q=vec2(fbm(wp*3.+u_t*.12),fbm(wp*3.+vec2(5.2,1.3)+u_t*.1));',
+          '  vec2 r=vec2(fbm(wp*3.+4.*q+vec2(1.7,9.2)+u_t*.08),fbm(wp*3.+4.*q+vec2(8.3,2.8)+u_t*.06));',
           '  float flow=length(r);',
-          /* Primary emitter — centre, gold-dominant */
-          '  float d1=length(p)+fbm(p*5.+u_t*.2)*.12;',
+          /* Primary emitter — centre, gold (~40%) */
+          '  float d1=length(wp)+fbm(wp*5.+u_t*.2)*.12;',
           '  float thz1=sin(d1*40.-u_t*4.)*.5+.5;',
           '  thz1*=smoothstep(1.2,0.,d1);',
           '  float e1=smoothstep(.012,0.,abs(thz1-.5))*smoothstep(1.,0.15,d1);',
-          /* Secondary emitter — offset, cyan */
-          '  float d2=length(p-vec2(-.28,.18))+fbm(p*6.-u_t*.12)*.08;',
+          /* Secondary emitter — offset, cyan (~30%) */
+          '  float d2=length(wp-vec2(-.28,.18))+fbm(wp*6.-u_t*.12)*.08;',
           '  float thz2=sin(d2*35.-u_t*3.2)*.5+.5;',
-          '  thz2*=smoothstep(.9,0.,d2)*.7;',
-          '  float e2=smoothstep(.014,0.,abs(thz2-.5))*smoothstep(.8,.1,d2);',
-          /* Tertiary emitter — offset, purple */
-          '  float d3=length(p-vec2(.32,-.14))+fbm(p*4.5+u_t*.1)*.1;',
+          '  thz2*=smoothstep(1.1,0.,d2);',
+          '  float e2=smoothstep(.013,0.,abs(thz2-.5))*smoothstep(.9,.1,d2);',
+          /* Tertiary emitter — offset, purple (~30%) */
+          '  float d3=length(wp-vec2(.32,-.14))+fbm(wp*4.5+u_t*.1)*.1;',
           '  float thz3=sin(d3*30.-u_t*2.6)*.5+.5;',
-          '  thz3*=smoothstep(.8,0.,d3)*.5;',
-          '  float e3=smoothstep(.016,0.,abs(thz3-.5))*smoothstep(.7,.1,d3);',
-          /* Mouse distortion ring */
-          '  float mring=sin(md*50.-u_t*5.)*.5+.5;',
-          '  float me=smoothstep(.01,0.,abs(mring-.5))*mf;',
+          '  thz3*=smoothstep(1.,0.,d3);',
+          '  float e3=smoothstep(.014,0.,abs(thz3-.5))*smoothstep(.85,.1,d3);',
+          /* Mouse smoke ripple */
+          '  float mring=sin(md*30.-u_t*4.)*.5+.5;',
+          '  float me=smoothstep(.015,0.,abs(mring-.5))*mf*.6;',
           /* Flow streaks */
           '  float streak=fbm(vec2(r.x*8.+u_t*.3,r.y*8.));',
-          '  streak=smoothstep(.35,.65,streak)*.25;',
-          /* Palette — gold primary, cyan secondary, purple tertiary */
+          '  streak=smoothstep(.35,.65,streak)*.2;',
+          /* Palette — balanced: gold ~40%, cyan ~30%, purple ~30% */
           '  vec3 gold=vec3(1.,.843,0.);',
           '  vec3 cyan=vec3(0.,.898,.8);',
           '  vec3 purple=vec3(.545,.361,.965);',
           '  vec3 col=vec3(0.);',
-          '  col+=gold*(e1*1.4+thz1*.12+streak*flow*.8);',
-          '  col+=cyan*(e2*1.1+thz2*.08+streak*(1.-flow)*.6);',
-          '  col+=purple*(e3*.9+thz3*.06);',
-          '  col+=mix(gold,cyan,.5)*me*1.5;',
-          /* Glow halos */
-          '  col+=gold*smoothstep(.5,0.,length(p))*.06;',
-          '  col+=cyan*smoothstep(.45,0.,length(p-vec2(-.28,.18)))*.04;',
-          '  col+=purple*smoothstep(.4,0.,length(p-vec2(.32,-.14)))*.03;',
-          '  col+=gold*mf*.08;',
+          '  col+=gold*(e1*.9+thz1*.08+streak*flow*.4);',
+          '  col+=cyan*(e2*1.2+thz2*.12+streak*(1.-flow)*.5);',
+          '  col+=purple*(e3*1.1+thz3*.1+streak*.35);',
+          '  col+=mix(cyan,purple,.5)*me*1.2;',
+          /* Glow halos — balanced */
+          '  col+=gold*smoothstep(.5,0.,length(wp))*.05;',
+          '  col+=cyan*smoothstep(.55,0.,length(wp-vec2(-.28,.18)))*.06;',
+          '  col+=purple*smoothstep(.5,0.,length(wp-vec2(.32,-.14)))*.06;',
+          '  col+=mix(gold,cyan,.3)*mf*.06;',
           /* Flow colour tint */
-          '  col+=mix(gold,purple,r.x)*streak*.5;',
+          '  col+=mix(cyan,purple,r.x)*streak*.3;',
+          '  col+=gold*streak*flow*.15;',
           /* Background */
-          '  col+=mix(vec3(.04,.035,.07),vec3(.055,.03,.09),uv.y);',
+          '  col+=mix(vec3(.04,.035,.07),vec3(.045,.03,.08),uv.y);',
           '  gl_FragColor=vec4(col,1.);',
           '}'
         ].join('\n');
