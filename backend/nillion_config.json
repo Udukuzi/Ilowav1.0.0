@@ -1,0 +1,19 @@
+{
+  "cluster": "testnet",
+  "rpc_url": "https://testnet-nillion-rpc.lavenderfive.com",
+  "node_url": "http://localhost:37340",
+  "credentials_path": "/opt/ilowa/nillion/accuser/credentials.json",
+  "store_ttl_days": 90,
+  "default_permissions": {
+    "retrieve": [],
+    "update": [],
+    "delete": []
+  },
+  "secret_types": {
+    "points_breakdown": { "ttl_days": 365, "program_id": null },
+    "bet_amount":       { "ttl_days": 30,  "program_id": null },
+    "vote":             { "ttl_days": 14,  "program_id": null },
+    "pii":              { "ttl_days": 730, "program_id": null },
+    "ai_data":          { "ttl_days": 180, "program_id": null }
+  }
+}

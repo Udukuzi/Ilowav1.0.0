@@ -1,0 +1,29 @@
+{
+  "name": "ilowa-server",
+  "version": "1.0.0",
+  "description": "Ilowa API server - Qwen3 AI, voice transcription, elder chat",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "npx tsx watch index.ts",
+    "start": "npx tsx index.ts",
+    "build": "npx tsc"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.95.4",
+    "@supabase/supabase-js": "^2.46.2",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.73.0",
+    "tweetnacl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
+    "@types/tweetnacl": "^1.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

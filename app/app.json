@@ -1,0 +1,82 @@
+{
+  "expo": {
+    "name": "Ilowa",
+    "slug": "ilowa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "ilowa",
+    "owner": "mdukuzi",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ilowa.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Ilowa needs microphone access for voice predictions and radio call-ins",
+        "NSCameraUsageDescription": "Ilowa may use camera for future features",
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ilowa.app",
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.VIBRATE",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "ilowa"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      "expo-local-authentication",
+      "expo-dev-client",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Ilowa needs microphone access for voice predictions and radio call-ins"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4f36effe-993a-42a1-99cf-015a697e89a1"
+      },
+      "router": {}
+    }
+  }
+}

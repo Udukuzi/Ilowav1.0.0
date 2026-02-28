@@ -1,0 +1,33 @@
+[package]
+name = "ilowa"
+version = "0.1.0"
+description = "Ilowa - Cultural SocialFi Radio on Solana"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ilowa"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = "0.32.0"
+anchor-spl = "0.32.0"
+# pin blake3 below 1.8.3 — that version requires edition2024/Cargo 1.85+
+blake3 = ">=1.0, <1.8.3"
+# Light Protocol SDK - commented out due to borsh version conflict with Anchor 0.32
+# Requires Anchor 0.30 or dedicated Light Protocol environment
+# light-sdk = "0.22.0"
+# light-hasher = "5.0.0"
+
+[dev-dependencies]
+anchor-lang = { version = "0.32.0", features = ["init-if-needed"] }
+solana-program-test = "2.3"
+solana-sdk = "2.3"
+tokio = { version = "1", features = ["full"] }

@@ -1,0 +1,21 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+asyncpg==0.30.0
+python-dotenv==1.0.1
+httpx==0.28.0
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# Nillion SDK — pin to whatever testnet version is current
+# Check https://pypi.org/project/nillion-client/ for latest
+nillion-client==0.3.0
+
+# crypto / solana helpers
+cryptography==43.0.3
+PyNaCl==1.5.0
+base58==2.1.1
+solana==0.35.1
+solders==0.21.6
+
+# misc
+python-jose[cryptography]==3.3.0

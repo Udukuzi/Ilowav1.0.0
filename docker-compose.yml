@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # ── Node.js API Gateway ──────────────────────────────────────
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file: ./server/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - PYTHON_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Python FastAPI Backend ───────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file: ./backend/.env
+    environment:
+      - LOG_LEVEL=info
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Supabase (self-hosted) ───────────────────────────────────
+  # For local dev / VPS deployment. On managed Supabase, remove this.
+  supabase-db:
+    image: supabase/postgres:15.1.1.61
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ilowa_dev_pw}
+      POSTGRES_DB: ilowa
+    volumes:
+      - supabase-data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+volumes:
+  supabase-data:

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ilowa — Cultural SocialFi Radio for the Global South</title>
+  <meta name="description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana. Prediction markets, live radio, elder wisdom, and community governance for 2.5 billion users." />
+  <meta property="og:title" content="Ilowa — Cultural SocialFi Radio" />
+  <meta property="og:description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0A0A0F;
+      --card: #111118;
+      --cyan: #00E5CC;
+      --gold: #FFD700;
+      --purple: #8B5CF6;
+      --text: #E8E6F0;
+      --muted: #8A8A9B;
+      --truth: #10B981;
+      --doubt: #EF4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .grain {
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,229,204,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,229,204,0.08);
+      border: 1px solid rgba(0,229,204,0.2);
+      border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 13px; font-weight: 600;
+      color: var(--cyan);
+      margin-bottom: 32px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(42px, 8vw, 80px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent { color: var(--cyan); }
+    .hero h1 .gold   { color: var(--gold); }
+
+    .hero .subtitle {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: var(--muted);
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .cta-row {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 32px;
+      border-radius: 14px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700; font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer; border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--black);
+      box-shadow: 0 0 30px rgba(0,229,204,0.3);
+    }
+    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,229,204,0.4); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Sora', sans-serif;
+      font-size: 28px; font-weight: 700;
+      color: var(--cyan);
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ─── Features ─── */
+    .features {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 60px;
+      max-width: 550px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 32px 28px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(0,229,204,0.2);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 17px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-solana { background: rgba(139,92,246,0.12); color: var(--purple); }
+    .tag-ai     { background: rgba(0,229,204,0.1);   color: var(--cyan); }
+    .tag-live   { background: rgba(239,68,68,0.1);    color: var(--doubt); }
+    .tag-social { background: rgba(255,215,0,0.1);    color: var(--gold); }
+
+    /* ─── Tech stack ─── */
+    .stack {
+      padding: 80px 24px;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .stack-inner {
+      max-width: 900px; margin: 0 auto;
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .stack-item {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stack-item .emoji { font-size: 24px; margin-bottom: 8px; }
+    .stack-item h4 { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; }
+    .stack-item p  { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* ─── Elders ─── */
+    .elders {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .elder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+
+    .elder-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .elder-card:hover { border-color: rgba(0,229,204,0.2); }
+
+    .elder-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .elder-card h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; }
+    .elder-card .region { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* ─── Download ─── */
+    .download {
+      padding: 100px 24px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 100%, rgba(0,229,204,0.06) 0%, transparent 60%);
+    }
+
+    .download .section-title { margin-bottom: 12px; }
+
+    .download-note {
+      color: var(--muted); font-size: 14px; margin-bottom: 40px;
+    }
+
+    .download-card {
+      background: var(--card);
+      border: 1px solid rgba(0,229,204,0.15);
+      border-radius: 20px;
+      padding: 40px 32px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .download-card h3 {
+      font-family: 'Sora', sans-serif;
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .download-card p {
+      color: var(--muted); font-size: 13px; margin-bottom: 24px;
+    }
+
+    .download-card .btn { width: 100%; justify-content: center; }
+
+    .download-meta {
+      margin-top: 20px;
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    footer p {
+      font-size: 13px; color: var(--muted);
+    }
+
+    footer a {
+      color: var(--cyan); text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex; gap: 24px; justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 40px 20px 60px; }
+      .hero-stats { gap: 24px; }
+      .cta-row { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 300px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>◈</span> Built on Solana
+    </div>
+    <h1>
+      <span class="accent">Ilowa</span><br />
+      Cultural SocialFi<br />
+      <span class="gold">Radio</span>
+    </h1>
+    <p class="subtitle">
+      Voice-native, AI-powered radio &amp; prediction markets for the Global South.
+      Built on Solana. Guided by 9 regional Elders. Serving 2.5 billion voices.
+    </p>
+    <div class="cta-row">
+      <a href="/ilowa.apk" class="btn btn-primary" download>
+        ⬇ Download APK
+      </a>
+      <a href="https://github.com/BantuBloomNetwork/ilowa" class="btn btn-secondary" target="_blank" rel="noopener">
+        ⌂ GitHub Repo
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Regional Elders</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Core Tabs</div></div>
+      <div class="stat"><div class="stat-num">139</div><div class="stat-label">Source Files</div></div>
+      <div class="stat"><div class="stat-num">28</div><div class="stat-label">On-chain Ixs</div></div>
+    </div>
+  </section>
+
+  <!-- ─── Features ─── -->
+  <section class="features">
+    <h2 class="section-title">What Ilowa Does</h2>
+    <p class="section-sub">A complete cultural SocialFi ecosystem — radio, markets, AI, governance — in one mobile app.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📻</div>
+        <h3>Live Cultural Radio</h3>
+        <p>Stream live radio via Livepeer HLS. Browse 1000+ real stations by region. Call in with voice recordings uploaded to IPFS.</p>
+        <span class="feature-tag tag-live">LIVEPEER + IPFS</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Prediction Markets</h3>
+        <p>Create and bet on cultural, crypto, sports, and political predictions. On-chain via Light Protocol with optional shielded bets through Arcium.</p>
+        <span class="feature-tag tag-solana">SOLANA ON-CHAIN</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Elder AI Wisdom</h3>
+        <p>Chat with your regional Elder — powered by Cohere Aya for cultural context and GLM-5 for deep reasoning. Fully offline-capable wisdom fallback.</p>
+        <span class="feature-tag tag-ai">AYA + GLM-5</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h3>Audius Music Browser</h3>
+        <p>Discover artists, view supporter leaderboards, tip with $AUDIO via OrbitFlare Blinks. Artist profiles with full track listings.</p>
+        <span class="feature-tag tag-social">AUDIUS + BLINKS</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎫</div>
+        <h3>KYD Event Ticketing</h3>
+        <p>Buy event tickets with SOL via KYD Labs. Tiered pricing, QR receipts, and shareable Blink links for each event.</p>
+        <span class="feature-tag tag-solana">KYD PROTOCOL</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Points &amp; Loyalty</h3>
+        <p>Fibonacci-tier XP system with early adopter badges (Genesis Elder / Pioneer Voice). Torque loyalty campaigns with on-chain rewards.</p>
+        <span class="feature-tag tag-social">TORQUE + NILLION</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🗳️</div>
+        <h3>Hybrid Governance</h3>
+        <p>Community proposals with on-chain voting. Elder-weighted governance ensures cultural representation across all 9 regions.</p>
+        <span class="feature-tag tag-solana">DAO + ELDER WEIGHT</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Privacy &amp; Security</h3>
+        <p>Elder Guardian recovery, social recovery, biometric auth. Shielded bets via Arcium MXE. Voice biometrics for identity.</p>
+        <span class="feature-tag tag-ai">ARCIUM + LIGHT</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3>AI Podcasts</h3>
+        <p>Elder-narrated podcast episodes via TTS. Content library covering crypto, culture, and community stories — playable in-app.</p>
+        <span class="feature-tag tag-ai">ELDER TTS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Tech Stack ─── -->
+  <section class="stack">
+    <div class="stack-inner">
+      <h2 class="section-title">Tech Stack</h2>
+      <p class="section-sub">Built entirely on open protocols and decentralized infrastructure.</p>
+      <div class="stack-grid">
+        <div class="stack-item"><div class="emoji">⚡</div><h4>Solana</h4><p>Anchor smart contracts</p></div>
+        <div class="stack-item"><div class="emoji">📱</div><h4>Expo / React Native</h4><p>Cross-platform mobile</p></div>
+        <div class="stack-item"><div class="emoji">🤖</div><h4>Cohere Aya</h4><p>Multilingual AI</p></div>
+        <div class="stack-item"><div class="emoji">🧮</div><h4>GLM-5</h4><p>Deep reasoning</p></div>
+        <div class="stack-item"><div class="emoji">🎥</div><h4>Livepeer</h4><p>Live radio streaming</p></div>
+        <div class="stack-item"><div class="emoji">📦</div><h4>IPFS / Arweave</h4><p>Content storage</p></div>
+        <div class="stack-item"><div class="emoji">💬</div><h4>XMTP</h4><p>E2E encrypted chat</p></div>
+        <div class="stack-item"><div class="emoji">🔒</div><h4>Arcium / Light</h4><p>Privacy layer</p></div>
+        <div class="stack-item"><div class="emoji">🗄️</div><h4>Nillion</h4><p>Blind data vault</p></div>
+        <div class="stack-item"><div class="emoji">🎫</div><h4>KYD Labs</h4><p>Event ticketing</p></div>
+        <div class="stack-item"><div class="emoji">🎵</div><h4>Audius</h4><p>Music + artist coins</p></div>
+        <div class="stack-item"><div class="emoji">🔗</div><h4>OrbitFlare</h4><p>Solana Blinks</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Elders ─── -->
+  <section class="elders">
+    <h2 class="section-title">Meet the 9 Elders</h2>
+    <p class="section-sub">Each region has a cultural guide — an Elder who embodies the community's wisdom, language, and traditions.</p>
+    <div class="elder-grid">
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(0,229,204,0.1)">🧓🏿</div>
+        <h4>Baba Adewale</h4>
+        <div class="region">West Africa</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(139,92,246,0.1)">👵🏿</div>
+        <h4>Mama Zawadi</h4>
+        <div class="region">East Africa</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(255,215,0,0.1)">👵🏾</div>
+        <h4>Gogo Thandi</h4>
+        <div class="region">Southern Africa</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(239,68,68,0.1)">🧓🏽</div>
+        <h4>Don Esteban</h4>
+        <div class="region">Latin America</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(16,185,129,0.1)">👵🏽</div>
+        <h4>Lola Maria</h4>
+        <div class="region">Southeast Asia</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(59,130,246,0.1)">🧓🏽</div>
+        <h4>Dada Rajesh</h4>
+        <div class="region">South Asia</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(234,179,8,0.1)">👵🏽</div>
+        <h4>Sitt Fatima</h4>
+        <div class="region">MENA</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(244,114,182,0.1)">👵🏽</div>
+        <h4>Tantie Rose</h4>
+        <div class="region">Caribbean</div>
+      </div>
+      <div class="elder-card">
+        <div class="elder-avatar" style="background:rgba(56,189,248,0.1)">👵🏾</div>
+        <h4>Aunty Leilani</h4>
+        <div class="region">Pacific Islands</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Download ─── -->
+  <section class="download" id="download">
+    <h2 class="section-title">Try Ilowa</h2>
+    <p class="download-note">Android APK — install directly on your device. No Play Store required.</p>
+    <div class="download-card">
+      <h3>Ilowa v1.0.0</h3>
+      <p>Cultural SocialFi Radio for the Global South — Feb 2026</p>
+      <a href="/ilowa.apk" class="btn btn-primary" download>
+        ⬇ Download APK
+      </a>
+      <div class="download-meta">
+        Requires Android 8.0+ · ~50 MB · Solana Devnet
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/Udukuzi/Ilowav1.0.0" target="_blank" rel="noopener">GitHub</a>
+      <a href="#download">Download</a>
+      <a href="https://twitter.com/BantuBloom" target="_blank" rel="noopener">Twitter</a>
+    </div>
+    <p>BantuBloomNetwork 2026 © — Built with purpose for the Global South</p>
+  </footer>
+
+</body>
+</html>
