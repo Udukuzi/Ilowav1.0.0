@@ -14,7 +14,7 @@ export const REGIONS: Region[] = [
     id: 'westAfrica',
     name: 'West Africa',
     emoji: '🌍',
-    elderId: 'baba-adewale',
+    elderId: 'baba-dee',
     timezone: 'Africa/Lagos',
     population: '400M+',
   },

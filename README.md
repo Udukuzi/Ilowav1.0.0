@@ -59,7 +59,7 @@ Ilowa connects 2.5 billion people across 9 Global South regions to earn, learn, 
 
 | Region | Elder | Cultural Focus |
 |--------|-------|---------------|
-| West Africa | Baba Adewale | Yoruba, Hausa, Igbo wisdom |
+| West Africa | Baba Dee | Yoruba, Hausa, Igbo wisdom |
 | East Africa | Mama Zawadi | Swahili, M-Pesa, tech hubs |
 | Southern Africa | Gogo Thandi | Ubuntu, Rainbow Nation |
 | South Asia | Dada Rajesh | Hindi, dharma, Indian markets |

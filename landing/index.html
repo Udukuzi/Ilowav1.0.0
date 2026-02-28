@@ -6,7 +6,7 @@
   <title>Ilowa — Cultural SocialFi Radio for the Global South</title>
   <meta name="description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana. Prediction markets, live radio, elder wisdom, and community governance for 2.5 billion users." />
   <meta property="og:title" content="Ilowa — Cultural SocialFi Radio" />
-  <meta property="og:description" content="Voice-native, AI-powered Cultural SocialFi Radio built on Solana." />
+  <meta property="og:description" content="Voice-native, AI-powered radio and prediction markets for the Global South. Built on Solana." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -40,6 +40,14 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
+    /* ─── Shader Canvas (hero bg) ─── */
+    #shader-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
     /* ─── Hero ─── */
     .hero {
       min-height: 100vh;
@@ -47,9 +55,10 @@
       text-align: center;
       padding: 60px 24px 80px;
       position: relative;
-      background: radial-gradient(ellipse at 50% 0%, rgba(0,229,204,0.08) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%);
+      overflow: hidden;
     }
+
+    .hero > *:not(#shader-canvas) { position: relative; z-index: 1; }
 
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
@@ -78,7 +87,7 @@
     .hero .subtitle {
       font-size: clamp(16px, 2.5vw, 20px);
       color: var(--muted);
-      max-width: 600px;
+      max-width: 620px;
       margin-bottom: 40px;
     }
 
@@ -124,6 +133,16 @@
     }
     .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
 
+    /* ─── WebGL divider ─── */
+    .gl-divider {
+      width: 100%; height: 120px;
+      position: relative; overflow: hidden;
+    }
+    .gl-divider canvas {
+      width: 100%; height: 100%;
+      display: block;
+    }
+
     /* ─── Features ─── */
     .features {
       padding: 100px 24px;
@@ -144,7 +163,7 @@
       color: var(--muted);
       font-size: 16px;
       margin-bottom: 60px;
-      max-width: 550px;
+      max-width: 580px;
       margin-left: auto; margin-right: auto;
     }
 
@@ -288,9 +307,20 @@
     .elder-card h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; }
     .elder-card .region { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
+    /* ─── Wave canvas (above download) ─── */
+    .wave-section {
+      width: 100%; height: 200px;
+      position: relative; overflow: hidden;
+      margin-top: -1px;
+    }
+    .wave-section canvas {
+      width: 100%; height: 100%;
+      display: block;
+    }
+
     /* ─── Download ─── */
     .download {
-      padding: 100px 24px;
+      padding: 80px 24px 100px;
       text-align: center;
       background: radial-gradient(ellipse at 50% 100%, rgba(0,229,204,0.06) 0%, transparent 60%);
     }
@@ -355,6 +385,8 @@
       .hero-stats { gap: 24px; }
       .cta-row { flex-direction: column; align-items: center; }
       .btn { width: 100%; max-width: 300px; justify-content: center; }
+      .wave-section { height: 120px; }
+      .gl-divider { height: 80px; }
     }
   </style>
 </head>
@@ -363,6 +395,7 @@
 
   <!-- ─── Hero ─── -->
   <section class="hero">
+    <canvas id="shader-canvas"></canvas>
     <div class="hero-badge">
       <i data-lucide="hexagon" style="width:14px;height:14px"></i> Built on Solana
     </div>
@@ -372,14 +405,14 @@
       <span class="gold">Radio</span>
     </h1>
     <p class="subtitle">
-      Voice-native, AI-powered radio &amp; prediction markets for the Global South.
-      Built on Solana. Guided by 9 regional Elders. Serving 2.5 billion voices.
+      Voice powered, AI guided radio and prediction markets built for the Global South.
+      Nine regional Elders. Over a hundred languages. 2.5 billion voices, one platform.
     </p>
     <div class="cta-row">
       <a href="/ilowa.apk" class="btn btn-primary" download>
         <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
       </a>
-      <a href="https://x.com/BantuBloom" class="btn btn-secondary" target="_blank" rel="noopener">
+      <a href="https://x.com/bantubloomnwk" class="btn btn-secondary" target="_blank" rel="noopener">
         <i data-lucide="twitter" style="width:18px;height:18px"></i> Follow Us
       </a>
     </div>
@@ -391,72 +424,75 @@
     </div>
   </section>
 
+  <!-- ─── WebGL divider ─── -->
+  <div class="gl-divider"><canvas id="gl-divider-canvas"></canvas></div>
+
   <!-- ─── Features ─── -->
   <section class="features">
     <h2 class="section-title">What Ilowa Does</h2>
-    <p class="section-sub">A complete cultural SocialFi ecosystem — radio, markets, AI, governance — in one mobile app.</p>
+    <p class="section-sub">Everything your community needs in one app. Radio, markets, AI wisdom, governance, and more.</p>
 
     <div class="feature-grid">
       <div class="feature-card">
         <div class="feature-icon fi-red"><i data-lucide="radio"></i></div>
         <h3>Live Cultural Radio</h3>
-        <p>Stream live radio via Livepeer HLS. Browse 30,000+ real stations by region. Call in with voice recordings uploaded to IPFS.</p>
+        <p>Stream live radio through Livepeer HLS. Browse over 30,000 real stations sorted by region, and call in with voice recordings that get uploaded straight to IPFS.</p>
         <span class="feature-tag tag-live">LIVEPEER + IPFS</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-purple"><i data-lucide="bar-chart-3"></i></div>
         <h3>Prediction Markets</h3>
-        <p>Create and bet on cultural, crypto, sports, and political predictions. On-chain via Light Protocol with optional shielded bets through Arcium.</p>
+        <p>Create and place bets on cultural, crypto, sports, and political predictions. Everything runs on chain via Light Protocol, with optional shielded bets through Arcium for privacy.</p>
         <span class="feature-tag tag-solana">SOLANA ON-CHAIN</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-cyan"><i data-lucide="brain"></i></div>
         <h3>Elder AI Wisdom</h3>
-        <p>Chat with your regional Elder — powered by Cohere Aya for cultural context and GLM-5 for deep reasoning. Fully offline-capable wisdom fallback.</p>
+        <p>Chat with your regional Elder, powered by Cohere Aya for deep cultural context and GLM-5 for reasoning. Even when you're offline, the local wisdom fallback has you covered.</p>
         <span class="feature-tag tag-ai">AYA + GLM-5</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-gold"><i data-lucide="music"></i></div>
         <h3>Audius Music Browser</h3>
-        <p>Discover artists, view supporter leaderboards, tip with $AUDIO via OrbitFlare Blinks. Artist profiles with full track listings.</p>
+        <p>Discover artists, check out supporter leaderboards, and tip creators with $AUDIO through OrbitFlare Blinks. Full artist profiles with every track listed.</p>
         <span class="feature-tag tag-social">AUDIUS + BLINKS</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-purple"><i data-lucide="ticket"></i></div>
         <h3>KYD Event Ticketing</h3>
-        <p>Buy event tickets with SOL via KYD Labs. Tiered pricing, QR receipts, and shareable Blink links for each event.</p>
+        <p>Buy event tickets with SOL through KYD Labs. Tiered pricing, QR receipts, and shareable Blink links make it easy to get your crew involved.</p>
         <span class="feature-tag tag-solana">KYD PROTOCOL</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-gold"><i data-lucide="trophy"></i></div>
-        <h3>Points &amp; Loyalty</h3>
-        <p>Fibonacci-tier XP system with early adopter badges (Genesis Elder / Pioneer Voice). Torque loyalty campaigns with on-chain rewards.</p>
+        <h3>Points and Loyalty</h3>
+        <p>A Fibonacci tier XP system with early adopter badges like Genesis Elder and Pioneer Voice. Torque loyalty campaigns dish out real on chain rewards.</p>
         <span class="feature-tag tag-social">TORQUE + NILLION</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-green"><i data-lucide="vote"></i></div>
         <h3>Hybrid Governance</h3>
-        <p>Community proposals with on-chain voting. Elder-weighted governance ensures cultural representation across all 9 regions.</p>
+        <p>Community proposals with on chain voting. Elder weighted governance makes sure every region gets proper cultural representation.</p>
         <span class="feature-tag tag-solana">DAO + ELDER WEIGHT</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-blue"><i data-lucide="shield-check"></i></div>
-        <h3>Privacy &amp; Security</h3>
-        <p>Elder Guardian recovery, social recovery, biometric auth. Shielded bets via Arcium MXE. Voice biometrics for identity.</p>
+        <h3>Privacy and Security</h3>
+        <p>Elder Guardian recovery, social recovery, biometric authentication. Shielded bets through Arcium MXE, plus voice biometrics for identity verification.</p>
         <span class="feature-tag tag-ai">ARCIUM + LIGHT</span>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon fi-cyan"><i data-lucide="mic"></i></div>
         <h3>AI Podcasts</h3>
-        <p>Elder-narrated podcast episodes via TTS. Content library covering crypto, culture, and community stories — playable in-app.</p>
+        <p>Elder narrated podcast episodes generated with TTS. The content library covers crypto, culture, and community stories you can listen to right inside the app.</p>
         <span class="feature-tag tag-ai">ELDER TTS</span>
       </div>
     </div>
@@ -466,7 +502,7 @@
   <section class="stack">
     <div class="stack-inner">
       <h2 class="section-title">Tech Stack</h2>
-      <p class="section-sub">Built entirely on open protocols and decentralized infrastructure.</p>
+      <p class="section-sub">Built on open protocols and decentralized infrastructure from the ground up.</p>
       <div class="stack-grid">
         <div class="stack-item">
           <div class="stack-icon fi-purple"><i data-lucide="zap"></i></div>
@@ -474,11 +510,11 @@
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-cyan"><i data-lucide="smartphone"></i></div>
-          <h4>Expo / React Native</h4><p>Cross-platform mobile</p>
+          <h4>Expo / React Native</h4><p>Cross platform mobile</p>
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-green"><i data-lucide="bot"></i></div>
-          <h4>Cohere Aya</h4><p>Multilingual AI (101 langs)</p>
+          <h4>Cohere Aya</h4><p>Multilingual AI, 101 languages</p>
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-cyan"><i data-lucide="cpu"></i></div>
@@ -494,7 +530,7 @@
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-gold"><i data-lucide="message-circle"></i></div>
-          <h4>XMTP</h4><p>E2E encrypted chat</p>
+          <h4>XMTP</h4><p>Encrypted messaging</p>
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-blue"><i data-lucide="lock"></i></div>
@@ -510,7 +546,7 @@
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-red"><i data-lucide="headphones"></i></div>
-          <h4>Audius</h4><p>Music + artist coins</p>
+          <h4>Audius</h4><p>Music and artist coins</p>
         </div>
         <div class="stack-item">
           <div class="stack-icon fi-green"><i data-lucide="link"></i></div>
@@ -523,11 +559,11 @@
   <!-- ─── Elders ─── -->
   <section class="elders">
     <h2 class="section-title">Meet the 9 Elders</h2>
-    <p class="section-sub">Each region has a cultural guide — an Elder who embodies the community's wisdom, language, and traditions.</p>
+    <p class="section-sub">Every region has its own cultural guide. An Elder who carries the community's wisdom, language, and traditions.</p>
     <div class="elder-grid">
       <div class="elder-card">
         <div class="elder-avatar fi-cyan"><i data-lucide="user"></i></div>
-        <h4>Baba Adewale</h4>
+        <h4>Baba Dee</h4>
         <div class="region">West Africa</div>
       </div>
       <div class="elder-card">
@@ -573,18 +609,21 @@
     </div>
   </section>
 
+  <!-- ─── Wave section ─── -->
+  <div class="wave-section"><canvas id="wave-canvas"></canvas></div>
+
   <!-- ─── Download ─── -->
   <section class="download" id="download">
     <h2 class="section-title">Try Ilowa</h2>
-    <p class="download-note">Android APK — install directly on your device. No Play Store required.</p>
+    <p class="download-note">Android APK you can install directly on your device. No Play Store needed.</p>
     <div class="download-card">
       <h3>Ilowa v1.0.0</h3>
-      <p>Cultural SocialFi Radio for the Global South — 2026</p>
+      <p>Cultural SocialFi Radio for the Global South, 2026.</p>
       <a href="/ilowa.apk" class="btn btn-primary" download>
         <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
       </a>
       <div class="download-meta">
-        Requires Android 8.0+ · ~50 MB · Solana Devnet
+        Requires Android 8.0 or later. Around 50 MB. Runs on Solana Devnet.
       </div>
     </div>
   </section>
@@ -592,7 +631,7 @@
   <!-- ─── Footer ─── -->
   <footer>
     <div class="footer-links">
-      <a href="https://x.com/BantuBloom" target="_blank" rel="noopener">
+      <a href="https://x.com/bantubloomnwk" target="_blank" rel="noopener">
         <i data-lucide="twitter"></i> Twitter / X
       </a>
       <a href="#download">
@@ -602,9 +641,230 @@
         <i data-lucide="mail"></i> Contact
       </a>
     </div>
-    <p>BantuBloomNetwork © 2026 — Built with purpose for the Global South</p>
+    <p>BantuBloomNetwork © 2026. Built with purpose for the Global South.</p>
   </footer>
 
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+
+    /* ═══════════════════════════════════════════════════
+       SHADER 1: Hero plasma background
+       Animated purple/cyan plasma grid behind the hero
+       ═══════════════════════════════════════════════════ */
+    (function initHeroShader() {
+      var canvas = document.getElementById('shader-canvas');
+      var gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+      if (!gl) return;
+
+      function resize() {
+        canvas.width = canvas.clientWidth * (window.devicePixelRatio > 1.5 ? 1.5 : window.devicePixelRatio);
+        canvas.height = canvas.clientHeight * (window.devicePixelRatio > 1.5 ? 1.5 : window.devicePixelRatio);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      var vert = 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
+      var frag = [
+        'precision mediump float;',
+        'uniform float t;',
+        'uniform vec2 r;',
+        'void main(){',
+        '  vec2 uv=(gl_FragCoord.xy-r*.5)/min(r.x,r.y);',
+        '  float d=length(uv);',
+        '  float a=atan(uv.y,uv.x);',
+        '  float v=sin(uv.x*3.+t*.7)*cos(uv.y*4.+t*.5);',
+        '  v+=sin(d*6.-t*1.2)*.5;',
+        '  v+=cos(a*3.+t*.3)*.3;',
+        '  vec3 c=mix(vec3(0.,.9,.8),vec3(.55,.36,.96),v*.5+.5);',
+        '  c*=smoothstep(1.8,.2,d);',
+        '  gl_FragColor=vec4(c*.35,1);',
+        '}'
+      ].join('\n');
+
+      function makeShader(src, type) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      var prog = gl.createProgram();
+      gl.attachShader(prog, makeShader(vert, gl.VERTEX_SHADER));
+      gl.attachShader(prog, makeShader(frag, gl.FRAGMENT_SHADER));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      var pLoc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(pLoc);
+      gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+
+      var tLoc = gl.getUniformLocation(prog, 't');
+      var rLoc = gl.getUniformLocation(prog, 'r');
+
+      function draw(now) {
+        gl.uniform1f(tLoc, now * 0.001);
+        gl.uniform2f(rLoc, canvas.width, canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       SHADER 2: WebGL color band divider
+       Flowing gradient ribbon between hero and features
+       ═══════════════════════════════════════════════════ */
+    (function initDividerShader() {
+      var canvas = document.getElementById('gl-divider-canvas');
+      var gl = canvas.getContext('webgl', { alpha: true });
+      if (!gl) return;
+
+      function resize() {
+        canvas.width = canvas.clientWidth * (window.devicePixelRatio > 1.5 ? 1.5 : 1);
+        canvas.height = canvas.clientHeight * (window.devicePixelRatio > 1.5 ? 1.5 : 1);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      var vert = 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
+      var frag = [
+        'precision mediump float;',
+        'uniform float t;',
+        'uniform vec2 r;',
+        'void main(){',
+        '  vec2 uv=gl_FragCoord.xy/r;',
+        '  float wave=sin(uv.x*12.+t*2.)*.15+sin(uv.x*7.-t*1.5)*.1;',
+        '  float band=smoothstep(.1,.3,uv.y+wave)*smoothstep(.9,.7,uv.y+wave);',
+        '  vec3 c1=vec3(0.,.9,.8);',
+        '  vec3 c2=vec3(.55,.36,.96);',
+        '  vec3 c3=vec3(1.,.84,0.);',
+        '  vec3 color=mix(c1,c2,uv.x);',
+        '  color=mix(color,c3,sin(uv.x*6.28+t)*.3+.3);',
+        '  gl_FragColor=vec4(color*band*.4, band*.5);',
+        '}'
+      ].join('\n');
+
+      function makeShader(src, type) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      var prog = gl.createProgram();
+      gl.attachShader(prog, makeShader(vert, gl.VERTEX_SHADER));
+      gl.attachShader(prog, makeShader(frag, gl.FRAGMENT_SHADER));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      var pLoc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(pLoc);
+      gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+
+      var tLoc = gl.getUniformLocation(prog, 't');
+      var rLoc = gl.getUniformLocation(prog, 'r');
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+      function draw(now) {
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1f(tLoc, now * 0.001);
+        gl.uniform2f(rLoc, canvas.width, canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+
+    /* ═══════════════════════════════════════════════════
+       SHADER 3: Wave animation above download section
+       Layered sine waves with depth, rhythm, and color
+       ═══════════════════════════════════════════════════ */
+    (function initWaveShader() {
+      var canvas = document.getElementById('wave-canvas');
+      var gl = canvas.getContext('webgl', { alpha: true });
+      if (!gl) return;
+
+      function resize() {
+        canvas.width = canvas.clientWidth * (window.devicePixelRatio > 1.5 ? 1.5 : 1);
+        canvas.height = canvas.clientHeight * (window.devicePixelRatio > 1.5 ? 1.5 : 1);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      var vert = 'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
+      var frag = [
+        'precision mediump float;',
+        'uniform float t;',
+        'uniform vec2 r;',
+        'void main(){',
+        '  vec2 uv=gl_FragCoord.xy/r;',
+        '  float w1=sin(uv.x*8.+t*1.8)*.12;',
+        '  float w2=sin(uv.x*5.-t*1.2+1.5)*.09;',
+        '  float w3=sin(uv.x*12.+t*2.5+3.)*.06;',
+        '  float w4=cos(uv.x*3.5+t*.8)*.15;',
+        '  float line1=smoothstep(.02,0.,abs(uv.y-.5+w1));',
+        '  float line2=smoothstep(.02,0.,abs(uv.y-.45+w2));',
+        '  float line3=smoothstep(.015,0.,abs(uv.y-.55+w3));',
+        '  float line4=smoothstep(.025,0.,abs(uv.y-.5+w4));',
+        '  float fill=smoothstep(.5+w1,1.,uv.y)*.08;',
+        '  vec3 c=vec3(0.,.9,.8)*line1;',
+        '  c+=vec3(.55,.36,.96)*line2;',
+        '  c+=vec3(1.,.84,0.)*line3*.7;',
+        '  c+=vec3(0.,.9,.8)*line4*.4;',
+        '  c+=vec3(0.,.9,.8)*fill;',
+        '  float a=max(max(line1,line2),max(line3,max(line4,fill)));',
+        '  gl_FragColor=vec4(c,a);',
+        '}'
+      ].join('\n');
+
+      function makeShader(src, type) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      var prog = gl.createProgram();
+      gl.attachShader(prog, makeShader(vert, gl.VERTEX_SHADER));
+      gl.attachShader(prog, makeShader(frag, gl.FRAGMENT_SHADER));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      var pLoc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(pLoc);
+      gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+
+      var tLoc = gl.getUniformLocation(prog, 't');
+      var rLoc = gl.getUniformLocation(prog, 'r');
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+      function draw(now) {
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1f(tLoc, now * 0.001);
+        gl.uniform2f(rLoc, canvas.width, canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+  </script>
 </body>
 </html>
