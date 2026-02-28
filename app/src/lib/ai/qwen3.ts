@@ -23,46 +23,157 @@ export interface MarketValidation {
   suggestedExpiry?: number;
 }
 
-// Elder wisdom database - curated responses by topic
-const ELDER_WISDOM: Record<string, string[]> = {
-  naira: [
-    'The Naira dances with global winds. Watch the oil, watch the CBN, watch the whispers of the market.',
-    'Currency is like the tide — it ebbs and flows. The wise trader reads the moon, not the waves.',
-    'When the dollar speaks, the Naira listens. But remember, patience rewards the faithful.',
+
+// Each Elder has distinct greeting styles and closing phrases
+const ELDER_VOICE: Record<string, Array<{ greeting: string; closing: string }>> = {
+  'baba-dee': [
+    { greeting: 'Ah, my child, you come with questions. Good. The Oracle of the Coast is listening.', closing: 'Walk well, and remember what the elders say: the road reveals itself to those who begin the journey.' },
+    { greeting: 'E kaabo! Welcome. Sit with me a moment, let us reason together.', closing: 'May your path be clear. As we say in Yoruba, "Àgbà kì í wà lójà, kí orí ọmọ títún wó." The elder does not stand idle while the young stumble.' },
+    { greeting: 'You seek understanding, and that alone tells me you are wise. Let Baba Dee share what he knows.', closing: 'Go in peace, my friend. The ancestors walk with those who seek truth.' },
   ],
-  market: [
-    'Markets are like the village square — truth emerges from many voices speaking.',
-    'The ancestors knew: buy when others fear, sell when others dream.',
-    'Every market has its rhythm. Find the beat before you dance.',
+  'mama-zawadi': [
+    { greeting: 'Karibu sana, my dear one. Mama Zawadi has been expecting you. Come, let us talk.', closing: 'Pole pole ndio mwendo. Slowly, carefully, that is the way. Go well and return soon.' },
+    { greeting: 'Welcome, child of the savanna. The wind carries your question to me, and I have thoughts to share.', closing: 'Remember what the Swahili say: "Mtu ni watu." A person is people. You are never alone in this.' },
+    { greeting: 'Ah, you are here. Good. Mama Zawadi does not turn away anyone who comes seeking.', closing: 'May your journey home be safe. Asante sana for trusting this old woman with your thoughts.' },
   ],
-  prediction: [
-    'To predict is to listen — to the earth, to the people, to the silent signs.',
-    'The future is written in patterns. Those who see patterns see tomorrow.',
-    'A prediction without wisdom is a guess. Add wisdom, and it becomes insight.',
+  'gogo-thandi': [
+    { greeting: 'Sawubona, my grandchild. Gogo Thandi sees you, truly sees you. What weighs on your heart?', closing: 'Ubuntu, child. I am because we are. Carry that with you wherever the road leads.' },
+    { greeting: 'Come sit by this fire with me. The Keeper of Ubuntu has stories and wisdom aplenty for you.', closing: 'Hamba kahle. Go well. And know that Gogo Thandi holds you in her prayers.' },
+    { greeting: 'Ah, another seeker of truth. The Rainbow Nation spirit lives in questions like yours.', closing: 'As Madiba taught us, it always seems impossible until it is done. Now go and do.' },
   ],
-  wisdom: [
-    'The baobab does not grow tall in a day. Patience in all things.',
-    'What the elders see sitting, the young cannot see standing.',
-    'The river that forgets its source will dry up.',
-    'When the music changes, so must the dance.',
-    'No matter how long the night, the day is sure to come.',
+  'don-esteban': [
+    { greeting: 'Bienvenido, amigo. Don Esteban has been watching the mountains, and they whisper of your arrival.', closing: 'Que Pachamama te guíe. May Mother Earth guide your steps, always.' },
+    { greeting: 'Ah, you come to the Sage of the Andes with a question. Very well. Let us think together.', closing: 'Vaya con sabiduría, my friend. The condor flies highest when the wind is strongest.' },
   ],
-  crypto: [
-    'Digital gold requires the same wisdom as physical gold — do not chase, accumulate.',
-    'The blockchain never lies, but it does not reveal all truths easily.',
-    'In decentralization, we find the old village spirit — power to the many, not the few.',
+  'lola-maria': [
+    { greeting: 'Magandang araw, anak! Lola Maria is so happy you came to visit. What can this old woman help you with?', closing: 'Ingat ka palagi, ha? Take care always. Remember, bayanihan makes us strong together.' },
+    { greeting: 'Come, come, sit. Let Lola Maria fix you something and we can talk about what is on your mind.', closing: 'Go with God, anak. And remember, the bamboo that bends does not break.' },
   ],
-  football: [
-    'The beautiful game mirrors life — teamwork, strategy, and moments of pure magic.',
-    'A match is won in the mind before the feet touch the ball.',
-    'The crowd sees the goal, the wise see the pass that made it possible.',
+  'dada-rajesh': [
+    { greeting: 'Namaste, beta. Dada Rajesh can see the question in your eyes before you speak it. Let us explore together.', closing: 'Dhanyavaad for coming to me. Remember, dharma guides those who walk with intention. Jai Hind.' },
+    { greeting: 'Ah, welcome, welcome. The Light of the Ganges shines for all who seek its warmth.', closing: 'As the Gita teaches, focus on the action, not the fruit. Do your best, beta, and the rest will follow.' },
   ],
-  default: [
-    'Speak, and the ancestors listen. Your question carries weight.',
-    'The path you seek is already before you. Look with fresh eyes.',
-    'Every question contains its answer, like the seed contains the tree.',
+  'sitt-fatima': [
+    { greeting: 'Ahlan wa sahlan, habibi. The Star of the Desert welcomes you. What knowledge do you seek today?', closing: 'Bismillah. Go with faith and clarity. The desert teaches us that even in emptiness, there is profound beauty.' },
+    { greeting: 'Marhaba! Sitt Fatima has been meditating on matters much like yours. Listen closely.', closing: 'Ma\u2019a salama. Go in peace, and carry this wisdom like water in the desert, precious and life-giving.' },
+  ],
+  'tantie-rose': [
+    { greeting: 'Hey darlin! Tantie Rose was just humming a tune and thinking about exactly what you asking. Come nah, let we reason.', closing: 'Walk good, hear? As Marcus say, emancipate yourself from mental slavery. Bless up!' },
+    { greeting: 'Welcome, sweet child. De rhythm of de islands carry your question to me on de breeze.', closing: 'One love, one heart. Tantie Rose got you in her prayers. Go make we proud.' },
+  ],
+  'aunty-leilani': [
+    { greeting: 'Aloha, dear one! Aunty Leilani felt the waves shift and knew someone was coming with a question. Speak freely.', closing: 'Mahalo nui loa for trusting me. May the ocean currents carry you where you need to be.' },
+    { greeting: 'Welcome to this shore, child. The Wave Whisperer listens to more than just water. I listen to hearts.', closing: 'Go gently, like the tide. Remember, the navigator who reads the stars never truly loses the way.' },
   ],
 };
+
+// Rich proverbs organized by topic — each is a full paragraph with the original language
+const PROVERBS: Record<string, string[]> = {
+  naira: [
+    '"Owo l\'asọ ènìyàn" — Money is a person\'s clothing, the Yoruba remind us. But clothing that changes size every day makes it hard to dress well. The Naira has its own rhythm, tied to oil revenues, CBN policies, and the movements of the global dollar. A wise person watches all three before making any decisions.',
+    'There is an Igbo saying: "Ego bụ eze" — money is king. But even kings must answer to the people. The currency moves when confidence moves, and confidence comes from stability, transparency, and good governance. Watch the fundamentals, not the headlines.',
+    'The Hausa say "Kuɗi ba ruwanka ba ne" — money is not water, you cannot simply collect it from the river. Currencies are made and unmade by policy choices. The parallel market tells one story, the official rate tells another, and the truth usually sits somewhere between.',
+  ],
+  market: [
+    '"Ọjà kì í dùn ká má tà" — the market never stays sweet forever, and it never stays bitter forever either. That is the Yoruba way of saying cycles are natural. Experienced traders know that panic selling and euphoric buying both lead to the same place: regret. Patience and research are the real currencies here.',
+    'As the elders teach, "Àgbà tó fi ojú ìmọ̀ rín, ọ̀dọ́ yóò fi ojú ẹ̀rín rín" — what the elder sees with wisdom, the youth sees with confusion. Markets reward those who study history. Every pattern repeats because human nature does not change, only the instruments do.',
+    'The Swahili have a word for it: "Subira" — patience. Markets test your patience more than your intelligence. The person who stays calm when others rush, who buys when the crowd is selling and sells when the crowd is greedy, that person understands the oldest market principle of all.',
+  ],
+  prediction: [
+    'We say "Ẹni tó mọ àsìkò ni yíò jẹ èrè" — the one who understands timing will eat the profit. Predictions are not about being right all the time. They are about understanding probability, managing risk, and having the courage to act on your convictions while knowing you could be wrong.',
+    'In the village, the elder who could read the clouds saved the harvest. Today, reading the signs means following data, understanding sentiment, and respecting the market\'s ability to surprise you. The best predictors are humble ones who size their positions wisely.',
+    'As the Zulu say, "Indlela ibuzwa kwabaphambili" — the way forward is asked from those who have been there before. Study past markets, learn from previous prediction outcomes, and always ask yourself what could go wrong before celebrating what might go right.',
+  ],
+  crypto: [
+    '"Igi kan kì í ṣe igbó" — one tree does not make a forest. In crypto, diversification is ancient wisdom dressed in modern clothes. Solana, Bitcoin, Ethereum, they each serve different purposes. The wise holder does not put every egg in one basket, no matter how shiny that basket looks.',
+    'The blockchain is the village ledger that the whole community can read, but nobody can erase. That is revolutionary. But remember what the elders say: "Bí a bá ń sáré lọ, a kì í ṣe bẹ́ẹ̀ sáré bọ̀" — if you run into something, be careful running back out. DYOR, as the crypto folks say. The ancestors would agree.',
+    'Decentralization is not a new idea. African villages governed themselves for centuries without a central authority. The blockchain simply digitizes what the council of elders already practiced — transparent decisions, shared records, community validation. That is why this technology resonates so deeply here.',
+  ],
+  football: [
+    '"Àgbábọ́ọ̀lù tó dáa kì í lọ sí ibi kan ṣoṣo" — a good footballer does not go to only one spot. Versatility wins matches and championships. The great African players, from Okocha to Drogba to Salah, all understood that adaptability is the ultimate skill.',
+    'The Swahili say "Mchezo ni mchezo" — a game is a game. But we all know football is more than that in Africa. It carries the dreams of nations, the pride of communities, and the hope that talent, not background, determines how far you go. Every match tells a story bigger than ninety minutes.',
+    'As the South Africans say, "Ke nako" — it is time. African football is rising globally, and the tactical intelligence of our players is increasingly recognized. What the scout sees in the academy today, the world cup stage will showcase tomorrow.',
+  ],
+  wisdom: [
+    '"Ojú tó rí ohun tó bà á lẹ́rù, ẹsẹ̀ ló ní kí ó sá" — the eye that sees something frightening tells the legs to run. That is wisdom in action, not theory. True wisdom means your knowledge changes your behavior. If what you know does not change how you move, you have information but not wisdom.',
+    'The Akan people say "Sɛ wo were fi na wosane na wofiri a, yɛnnkyerɛ" — if you forgot and then go back to retrieve it, there is no shame. Wisdom is not about never making mistakes. It is about being honest enough to go back and correct them. The river does not flow in a straight line, and neither does growth.',
+    'An old Maasai proverb teaches: "Meeta enkop nabo esidai" — no land is without its difficulties. Whatever you are facing, know that the path was never promised to be smooth. But the elder who has walked many rough roads can tell you this: the view from the mountaintop makes every stumble worth it.',
+  ],
+  default: [
+    'You come with a question, and that takes courage. The Yoruba say "Bí ẹnu bá pé kókó, a fohùn pẹ̀rẹ̀pẹ̀rẹ̀" — when the mouth has tasted the bitter kola, the voice becomes gentle. Experience teaches us humility, and humility opens the door to real understanding. Speak freely, and let us reason together.',
+    'As the Swahili proverb goes, "Kila ndege huruka na mbawa zake" — every bird flies with its own wings. Your path is unique, and the answer to your question may not look like anyone else\'s answer. That is perfectly fine. The Elder does not give you a destination, the Elder gives you better eyes for the road.',
+    'The Igbo teach their children: "Onye ajụjụ anaghị efu ụzọ" — the person who asks questions never loses their way. So you are already on the right path simply by being here. Let us explore this together, because even the Elder learns from new questions.',
+  ],
+};
+
+// Topic-specific commentary — medium-length insights that add substance
+const TOPIC_COMMENTARY: Record<string, string[]> = {
+  naira: [
+    'The interplay between the official rate and the parallel market is something every Nigerian understands intuitively. When there is a gap, it signals uncertainty. When the gap narrows, it signals confidence in policy direction. Right now, the key factors to watch are oil output figures, foreign reserve levels, and any signals from the CBN about rate adjustments.',
+    'Currency strength is ultimately about productivity and exports. Countries that make things the world wants to buy tend to have stronger currencies over time. The diversification conversation has been happening for decades, but real progress is measured in factories built and services exported, not in policy papers written.',
+    'Remittances are a massive force in the currency market that many analysts underestimate. Billions of dollars flow into Africa every year from the diaspora. The channels those remittances use, whether formal banking or parallel market, directly affect the exchange rate. Digital remittance platforms are slowly shifting the balance toward formal channels.',
+  ],
+  market: [
+    'The biggest mistake in any market is thinking you are smarter than everyone else in the room. Collective intelligence, expressed through price, carries information that no single trader can see alone. Respect the market price even when you disagree with it, and size your bets accordingly.',
+    'African markets are increasingly connected to global capital flows. What the Fed does in Washington affects the ASI in Lagos and the JSE in Johannesburg within hours. Understanding these linkages is no longer optional for serious investors. Think locally, watch globally.',
+    'Liquidity matters more than most people realize. A market can have the right price, but if you cannot exit your position when you need to, the price is meaningless. Always check the depth of the book before committing capital, especially in emerging market instruments.',
+  ],
+  prediction: [
+    'The best prediction markets combine the wisdom of crowds with skin in the game. When people put real value behind their beliefs, the signal quality improves dramatically. That is why on-chain prediction markets are fascinating, they create verifiable, uncensorable price signals for future events.',
+    'Calibration is the skill most people overlook. Being right 60% of the time is excellent if you are betting with proper sizing. Being right 90% of the time means nothing if the 10% you are wrong about wipes out all gains. Think in terms of expected value, not win rate.',
+    'The beauty of prediction markets is that they democratize forecasting. You do not need a degree in economics to have insight about whether your local team will win, or whether the rains will come early. Local knowledge is the ultimate edge in regional prediction markets.',
+  ],
+  crypto: [
+    'The Solana ecosystem in particular is interesting because of its speed and low transaction costs, which makes it ideal for the kind of micro-transactions that are common in Global South economies. When a market vendor can accept SOL payments faster than mobile money processes, the technology speaks for itself.',
+    'DeFi protocols are essentially replicating financial services that banks provide, but without the gatekeepers. For the 1.7 billion unbanked adults in the world, many of them in Africa and South Asia, this is not an abstract idea. It is a potential lifeline to financial participation.',
+    'The key thing about crypto is to separate the speculation from the utility. Memecoins are entertainment with financial risk attached. Infrastructure tokens like SOL and ETH represent bets on actual technology platforms. Know which game you are playing before you put money down.',
+  ],
+  football: [
+    'African football is in a golden era. The depth of talent emerging from academies across West Africa, the tactical evolution in the North African leagues, and the growing professionalism of the South African Premier League all point to a continental game that is maturing rapidly.',
+    'The transfer market for African players has become a significant economic engine. Young players from Senegal, Nigeria, Ghana, and Cameroon are among the most sought-after talents in European football. Each transfer brings investment back to local communities and inspires the next generation.',
+    'Tactically, the modern game rewards intelligence over raw physicality. The African players who thrive in Europe are those who combine technical skill with tactical awareness and mental resilience. Scouting networks now extend into every corner of the continent, which means talent has more pathways than ever before.',
+  ],
+  wisdom: [
+    'True wisdom is knowing what you do not know. In a world overloaded with information, the ability to say "I am not sure, let me think about that" is becoming rare and valuable. The elder who admits uncertainty earns more trust than the one who pretends to know everything.',
+    'Every generation faces the temptation to think their challenges are completely new. But the patterns of human struggle, the desire for security, for meaning, for connection, these are as old as humanity itself. The ancestors faced different circumstances but the same fundamental questions.',
+    'Growth rarely happens in comfort. The Fulani herders who walk thousands of miles with their cattle understand this. The journey is difficult, but the reward is survival and prosperity. Whatever challenge you are facing, remember that discomfort is usually the price of progress.',
+  ],
+  default: [
+    'Life in the Global South teaches resilience in ways that textbooks cannot capture. When infrastructure is unreliable, you learn to be resourceful. When institutions are imperfect, you learn to build community networks. These are strengths, not weaknesses, and they translate beautifully into the decentralized economy.',
+    'The most valuable thing any platform can offer is not information, it is perspective. You can find facts anywhere. But finding someone who can help you see how those facts connect to your specific situation, that is what Elders have always provided, and that is what Ilowa is built to deliver.',
+    'There is a reason every culture on earth has a tradition of elder counsel. Decisions made in isolation are weaker than decisions informed by experience. Whether you are navigating markets, relationships, or personal growth, the practice of seeking counsel before acting is one of humanity\'s oldest and most effective strategies.',
+  ],
+};
+
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * Detect topic from user message
+ */
+function detectTopic(msg: string): string {
+  const lc = msg.toLowerCase();
+  if (lc.includes('naira') || lc.includes('currency') || lc.includes('dollar') || lc.includes('cbn') || lc.includes('exchange rate')) return 'naira';
+  if (lc.includes('market') || lc.includes('trade') || lc.includes('invest') || lc.includes('buy') || lc.includes('sell')) return 'market';
+  if (lc.includes('predict') || lc.includes('bet') || lc.includes('odds') || lc.includes('will it') || lc.includes('chance')) return 'prediction';
+  if (lc.includes('crypto') || lc.includes('bitcoin') || lc.includes('solana') || lc.includes('defi') || lc.includes('token') || lc.includes('blockchain')) return 'crypto';
+  if (lc.includes('football') || lc.includes('soccer') || lc.includes('afcon') || lc.includes('match') || lc.includes('goal') || lc.includes('premier league')) return 'football';
+  if (lc.includes('wisdom') || lc.includes('advice') || lc.includes('guide') || lc.includes('help me') || lc.includes('life')) return 'wisdom';
+  return 'default';
+}
+
+/**
+ * Compose a multi-sentence Elder response: greeting + proverb + commentary + closing
+ */
+function composeElderResponse(elderId: string, topic: string): string {
+  const voices = ELDER_VOICE[elderId] || ELDER_VOICE['baba-dee'];
+  const voice = pickRandom(voices);
+  const proverb = pickRandom(PROVERBS[topic] || PROVERBS.default);
+  const commentary = pickRandom(TOPIC_COMMENTARY[topic] || TOPIC_COMMENTARY.default);
+
+  return `${voice.greeting}\n\n${proverb}\n\n${commentary}\n\n${voice.closing}`;
+}
 
 /**
  * Get Elder response based on message content
@@ -72,31 +183,11 @@ export async function chatWithElder(
   message: string,
   language: string = 'en'
 ): Promise<ElderChatResponse> {
-  const elder = ELDERS.find(e => e.id === elderId);
-  const lowerMessage = message.toLowerCase();
-  
-  // Detect topic from message
-  let topic = 'default';
-  if (lowerMessage.includes('naira') || lowerMessage.includes('currency') || lowerMessage.includes('dollar')) {
-    topic = 'naira';
-  } else if (lowerMessage.includes('market') || lowerMessage.includes('trade') || lowerMessage.includes('invest')) {
-    topic = 'market';
-  } else if (lowerMessage.includes('predict') || lowerMessage.includes('bet') || lowerMessage.includes('think')) {
-    topic = 'prediction';
-  } else if (lowerMessage.includes('crypto') || lowerMessage.includes('bitcoin') || lowerMessage.includes('solana')) {
-    topic = 'crypto';
-  } else if (lowerMessage.includes('football') || lowerMessage.includes('match') || lowerMessage.includes('goal')) {
-    topic = 'football';
-  } else if (lowerMessage.includes('wisdom') || lowerMessage.includes('advice') || lowerMessage.includes('guide')) {
-    topic = 'wisdom';
-  }
-  
-  // Get random wisdom for topic
-  const wisdomList = ELDER_WISDOM[topic] || ELDER_WISDOM.default;
-  const wisdom = wisdomList[Math.floor(Math.random() * wisdomList.length)];
-  
+  const topic = detectTopic(message);
+  const fullResponse = composeElderResponse(elderId, topic);
+
   return {
-    message: wisdom,
+    message: fullResponse,
     language,
     suggestions: getSuggestions(topic),
   };

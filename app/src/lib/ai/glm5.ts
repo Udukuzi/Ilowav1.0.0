@@ -4,8 +4,8 @@
 // API compatible with OpenAI chat completions format via Together AI / DeepInfra
 
 const GLM5_PROVIDERS = [
+  { name: 'deepinfra', url: 'https://api.deepinfra.com/v1/openai/chat/completions', envKey: 'EXPO_PUBLIC_DEEPINFRA_API_KEY', model: 'zai-org/GLM-5' },
   { name: 'together', url: 'https://api.together.xyz/v1/chat/completions', envKey: 'EXPO_PUBLIC_TOGETHER_API_KEY', model: 'THUDM/GLM-5-0805' },
-  { name: 'deepinfra', url: 'https://api.deepinfra.com/v1/openai/chat/completions', envKey: 'EXPO_PUBLIC_DEEPINFRA_API_KEY', model: 'THUDM/GLM-5-0805' },
 ] as const;
 
 export interface GLM5Request {

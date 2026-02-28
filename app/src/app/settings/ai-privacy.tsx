@@ -214,7 +214,7 @@ export default function AIPrivacySettings() {
               aiStatus?.glm5?.available ? styles.statusActive : styles.statusInactive
             ]}>
               <Text style={styles.statusBadgeText}>
-                {aiStatus?.glm5?.available ? 'Active' : 'No API Key'}
+                {aiStatus?.glm5?.available ? 'Active' : 'Unavailable'}
               </Text>
             </View>
           </View>
