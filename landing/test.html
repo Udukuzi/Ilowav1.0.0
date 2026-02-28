@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html><head><title>Shader Test</title>
+<style>
+body{margin:0;background:#000;color:#0f0;font-family:monospace;padding:20px}
+canvas{border:2px solid red;display:block;margin:20px 0}
+</style>
+</head><body>
+<h2>WebGL Shader Test</h2>
+<div id="log"></div>
+<canvas id="test" width="400" height="200"></canvas>
+<script>
+var log = document.getElementById('log');
+function L(msg){ log.innerHTML += msg + '<br>'; console.log(msg); }
+
+try {
+  var c = document.getElementById('test');
+  L('Canvas: ' + c.width + 'x' + c.height);
+  var gl = c.getContext('webgl');
+  if (!gl) { L('ERROR: No WebGL'); }
+  else {
+    L('WebGL: OK - ' + gl.getParameter(gl.RENDERER));
+    
+    var vs = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vs, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}');
+    gl.compileShader(vs);
+    L('Vert compile: ' + gl.getShaderParameter(vs, gl.COMPILE_STATUS));
+    
+    var fs = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fs, 
+      'precision highp float;uniform float time;uniform vec2 res;' +
+      'void main(){vec2 uv=gl_FragCoord.xy/res;' +
+      'float r=0.5+0.5*sin(uv.x*10.0+time);' +
+      'float g=0.5+0.5*sin(uv.y*10.0+time*1.3);' +
+      'float b=0.5+0.5*sin((uv.x+uv.y)*5.0+time*0.7);' +
+      'gl_FragColor=vec4(r,g,b,1.0);}');
+    gl.compileShader(fs);
+    L('Frag compile: ' + gl.getShaderParameter(fs, gl.COMPILE_STATUS));
+    if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) L('Frag err: ' + gl.getShaderInfoLog(fs));
+    
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    L('Link: ' + gl.getProgramParameter(prog, gl.LINK_STATUS));
+    gl.useProgram(prog);
+    
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    
+    var tLoc = gl.getUniformLocation(prog, 'time');
+    var rLoc = gl.getUniformLocation(prog, 'res');
+    
+    var t = 0;
+    function draw(){
+      t += 0.02;
+      gl.viewport(0, 0, c.width, c.height);
+      gl.uniform1f(tLoc, t);
+      gl.uniform2f(rLoc, c.width, c.height);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(draw);
+    }
+    draw();
+    L('Animation started - you should see colorful moving pattern above');
+  }
+} catch(e) { L('EXCEPTION: ' + e.message); }
+</script>
+</body></html>
