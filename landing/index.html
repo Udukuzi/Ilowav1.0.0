@@ -10,6 +10,7 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -167,9 +168,20 @@
     }
 
     .feature-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
     }
+
+    .feature-icon svg { width: 24px; height: 24px; }
+
+    .fi-cyan    { background: rgba(0,229,204,0.1); color: var(--cyan); }
+    .fi-purple  { background: rgba(139,92,246,0.1); color: var(--purple); }
+    .fi-gold    { background: rgba(255,215,0,0.1);  color: var(--gold); }
+    .fi-red     { background: rgba(239,68,68,0.1);  color: var(--doubt); }
+    .fi-green   { background: rgba(16,185,129,0.1); color: var(--truth); }
+    .fi-blue    { background: rgba(59,130,246,0.1);  color: #3B82F6; }
 
     .feature-card h3 {
       font-family: 'Sora', sans-serif;
@@ -220,9 +232,20 @@
       border-radius: 14px;
       padding: 20px;
       text-align: center;
+      transition: border-color 0.3s;
     }
 
-    .stack-item .emoji { font-size: 24px; margin-bottom: 8px; }
+    .stack-item:hover { border-color: rgba(0,229,204,0.15); }
+
+    .stack-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .stack-icon svg { width: 20px; height: 20px; }
+
     .stack-item h4 { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; }
     .stack-item p  { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
@@ -246,17 +269,22 @@
       border-radius: 16px;
       padding: 24px 16px;
       text-align: center;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s, transform 0.3s;
     }
-    .elder-card:hover { border-color: rgba(0,229,204,0.2); }
+    .elder-card:hover {
+      border-color: rgba(0,229,204,0.2);
+      transform: translateY(-3px);
+    }
 
     .elder-avatar {
       width: 56px; height: 56px;
       border-radius: 50%;
       margin: 0 auto 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
     }
+
+    .elder-avatar svg { width: 28px; height: 28px; }
+
     .elder-card h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; }
     .elder-card .region { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
@@ -312,12 +340,15 @@
 
     footer a {
       color: var(--cyan); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
     }
 
     .footer-links {
       display: flex; gap: 24px; justify-content: center;
       margin-bottom: 16px;
     }
+
+    .footer-links svg { width: 16px; height: 16px; }
 
     @media (max-width: 640px) {
       .hero { padding: 40px 20px 60px; }
@@ -333,7 +364,7 @@
   <!-- ─── Hero ─── -->
   <section class="hero">
     <div class="hero-badge">
-      <span>◈</span> Built on Solana
+      <i data-lucide="hexagon" style="width:14px;height:14px"></i> Built on Solana
     </div>
     <h1>
       <span class="accent">Ilowa</span><br />
@@ -346,17 +377,17 @@
     </p>
     <div class="cta-row">
       <a href="/ilowa.apk" class="btn btn-primary" download>
-        ⬇ Download APK
+        <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
       </a>
-      <a href="https://github.com/BantuBloomNetwork/ilowa" class="btn btn-secondary" target="_blank" rel="noopener">
-        ⌂ GitHub Repo
+      <a href="https://x.com/BantuBloom" class="btn btn-secondary" target="_blank" rel="noopener">
+        <i data-lucide="twitter" style="width:18px;height:18px"></i> Follow Us
       </a>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">9</div><div class="stat-label">Regional Elders</div></div>
-      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Core Tabs</div></div>
-      <div class="stat"><div class="stat-num">139</div><div class="stat-label">Source Files</div></div>
-      <div class="stat"><div class="stat-num">28</div><div class="stat-label">On-chain Ixs</div></div>
+      <div class="stat"><div class="stat-num">101+</div><div class="stat-label">Languages</div></div>
+      <div class="stat"><div class="stat-num">30k+</div><div class="stat-label">Radio Stations</div></div>
+      <div class="stat"><div class="stat-num">2.5B</div><div class="stat-label">Target Users</div></div>
     </div>
   </section>
 
@@ -367,63 +398,63 @@
 
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-icon">📻</div>
+        <div class="feature-icon fi-red"><i data-lucide="radio"></i></div>
         <h3>Live Cultural Radio</h3>
-        <p>Stream live radio via Livepeer HLS. Browse 1000+ real stations by region. Call in with voice recordings uploaded to IPFS.</p>
+        <p>Stream live radio via Livepeer HLS. Browse 30,000+ real stations by region. Call in with voice recordings uploaded to IPFS.</p>
         <span class="feature-tag tag-live">LIVEPEER + IPFS</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">📊</div>
+        <div class="feature-icon fi-purple"><i data-lucide="bar-chart-3"></i></div>
         <h3>Prediction Markets</h3>
         <p>Create and bet on cultural, crypto, sports, and political predictions. On-chain via Light Protocol with optional shielded bets through Arcium.</p>
         <span class="feature-tag tag-solana">SOLANA ON-CHAIN</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🧠</div>
+        <div class="feature-icon fi-cyan"><i data-lucide="brain"></i></div>
         <h3>Elder AI Wisdom</h3>
         <p>Chat with your regional Elder — powered by Cohere Aya for cultural context and GLM-5 for deep reasoning. Fully offline-capable wisdom fallback.</p>
         <span class="feature-tag tag-ai">AYA + GLM-5</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🎵</div>
+        <div class="feature-icon fi-gold"><i data-lucide="music"></i></div>
         <h3>Audius Music Browser</h3>
         <p>Discover artists, view supporter leaderboards, tip with $AUDIO via OrbitFlare Blinks. Artist profiles with full track listings.</p>
         <span class="feature-tag tag-social">AUDIUS + BLINKS</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🎫</div>
+        <div class="feature-icon fi-purple"><i data-lucide="ticket"></i></div>
         <h3>KYD Event Ticketing</h3>
         <p>Buy event tickets with SOL via KYD Labs. Tiered pricing, QR receipts, and shareable Blink links for each event.</p>
         <span class="feature-tag tag-solana">KYD PROTOCOL</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🏆</div>
+        <div class="feature-icon fi-gold"><i data-lucide="trophy"></i></div>
         <h3>Points &amp; Loyalty</h3>
         <p>Fibonacci-tier XP system with early adopter badges (Genesis Elder / Pioneer Voice). Torque loyalty campaigns with on-chain rewards.</p>
         <span class="feature-tag tag-social">TORQUE + NILLION</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🗳️</div>
+        <div class="feature-icon fi-green"><i data-lucide="vote"></i></div>
         <h3>Hybrid Governance</h3>
         <p>Community proposals with on-chain voting. Elder-weighted governance ensures cultural representation across all 9 regions.</p>
         <span class="feature-tag tag-solana">DAO + ELDER WEIGHT</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🔐</div>
+        <div class="feature-icon fi-blue"><i data-lucide="shield-check"></i></div>
         <h3>Privacy &amp; Security</h3>
         <p>Elder Guardian recovery, social recovery, biometric auth. Shielded bets via Arcium MXE. Voice biometrics for identity.</p>
         <span class="feature-tag tag-ai">ARCIUM + LIGHT</span>
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon">🎙️</div>
+        <div class="feature-icon fi-cyan"><i data-lucide="mic"></i></div>
         <h3>AI Podcasts</h3>
         <p>Elder-narrated podcast episodes via TTS. Content library covering crypto, culture, and community stories — playable in-app.</p>
         <span class="feature-tag tag-ai">ELDER TTS</span>
@@ -437,18 +468,54 @@
       <h2 class="section-title">Tech Stack</h2>
       <p class="section-sub">Built entirely on open protocols and decentralized infrastructure.</p>
       <div class="stack-grid">
-        <div class="stack-item"><div class="emoji">⚡</div><h4>Solana</h4><p>Anchor smart contracts</p></div>
-        <div class="stack-item"><div class="emoji">📱</div><h4>Expo / React Native</h4><p>Cross-platform mobile</p></div>
-        <div class="stack-item"><div class="emoji">🤖</div><h4>Cohere Aya</h4><p>Multilingual AI</p></div>
-        <div class="stack-item"><div class="emoji">🧮</div><h4>GLM-5</h4><p>Deep reasoning</p></div>
-        <div class="stack-item"><div class="emoji">🎥</div><h4>Livepeer</h4><p>Live radio streaming</p></div>
-        <div class="stack-item"><div class="emoji">📦</div><h4>IPFS / Arweave</h4><p>Content storage</p></div>
-        <div class="stack-item"><div class="emoji">💬</div><h4>XMTP</h4><p>E2E encrypted chat</p></div>
-        <div class="stack-item"><div class="emoji">🔒</div><h4>Arcium / Light</h4><p>Privacy layer</p></div>
-        <div class="stack-item"><div class="emoji">🗄️</div><h4>Nillion</h4><p>Blind data vault</p></div>
-        <div class="stack-item"><div class="emoji">🎫</div><h4>KYD Labs</h4><p>Event ticketing</p></div>
-        <div class="stack-item"><div class="emoji">🎵</div><h4>Audius</h4><p>Music + artist coins</p></div>
-        <div class="stack-item"><div class="emoji">🔗</div><h4>OrbitFlare</h4><p>Solana Blinks</p></div>
+        <div class="stack-item">
+          <div class="stack-icon fi-purple"><i data-lucide="zap"></i></div>
+          <h4>Solana</h4><p>Anchor smart contracts</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-cyan"><i data-lucide="smartphone"></i></div>
+          <h4>Expo / React Native</h4><p>Cross-platform mobile</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-green"><i data-lucide="bot"></i></div>
+          <h4>Cohere Aya</h4><p>Multilingual AI (101 langs)</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-cyan"><i data-lucide="cpu"></i></div>
+          <h4>GLM-5</h4><p>Deep reasoning engine</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-red"><i data-lucide="video"></i></div>
+          <h4>Livepeer</h4><p>Live radio streaming</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-blue"><i data-lucide="hard-drive"></i></div>
+          <h4>IPFS / Arweave</h4><p>Permanent storage</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-gold"><i data-lucide="message-circle"></i></div>
+          <h4>XMTP</h4><p>E2E encrypted chat</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-blue"><i data-lucide="lock"></i></div>
+          <h4>Arcium / Light</h4><p>Privacy layer</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-purple"><i data-lucide="database"></i></div>
+          <h4>Nillion</h4><p>Blind data vault</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-gold"><i data-lucide="calendar"></i></div>
+          <h4>KYD Labs</h4><p>Event ticketing</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-red"><i data-lucide="headphones"></i></div>
+          <h4>Audius</h4><p>Music + artist coins</p>
+        </div>
+        <div class="stack-item">
+          <div class="stack-icon fi-green"><i data-lucide="link"></i></div>
+          <h4>OrbitFlare</h4><p>Solana Blinks</p>
+        </div>
       </div>
     </div>
   </section>
@@ -459,47 +526,47 @@
     <p class="section-sub">Each region has a cultural guide — an Elder who embodies the community's wisdom, language, and traditions.</p>
     <div class="elder-grid">
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(0,229,204,0.1)">🧓🏿</div>
+        <div class="elder-avatar fi-cyan"><i data-lucide="user"></i></div>
         <h4>Baba Adewale</h4>
         <div class="region">West Africa</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(139,92,246,0.1)">👵🏿</div>
+        <div class="elder-avatar fi-purple"><i data-lucide="user"></i></div>
         <h4>Mama Zawadi</h4>
         <div class="region">East Africa</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(255,215,0,0.1)">👵🏾</div>
+        <div class="elder-avatar fi-gold"><i data-lucide="user"></i></div>
         <h4>Gogo Thandi</h4>
         <div class="region">Southern Africa</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(239,68,68,0.1)">🧓🏽</div>
+        <div class="elder-avatar fi-red"><i data-lucide="user"></i></div>
         <h4>Don Esteban</h4>
         <div class="region">Latin America</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(16,185,129,0.1)">👵🏽</div>
+        <div class="elder-avatar fi-green"><i data-lucide="user"></i></div>
         <h4>Lola Maria</h4>
         <div class="region">Southeast Asia</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(59,130,246,0.1)">🧓🏽</div>
+        <div class="elder-avatar fi-blue"><i data-lucide="user"></i></div>
         <h4>Dada Rajesh</h4>
         <div class="region">South Asia</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(234,179,8,0.1)">👵🏽</div>
+        <div class="elder-avatar fi-gold"><i data-lucide="user"></i></div>
         <h4>Sitt Fatima</h4>
         <div class="region">MENA</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(244,114,182,0.1)">👵🏽</div>
+        <div class="elder-avatar" style="background:rgba(244,114,182,0.1);color:#F472B6"><i data-lucide="user"></i></div>
         <h4>Tantie Rose</h4>
         <div class="region">Caribbean</div>
       </div>
       <div class="elder-card">
-        <div class="elder-avatar" style="background:rgba(56,189,248,0.1)">👵🏾</div>
+        <div class="elder-avatar fi-cyan"><i data-lucide="user"></i></div>
         <h4>Aunty Leilani</h4>
         <div class="region">Pacific Islands</div>
       </div>
@@ -512,9 +579,9 @@
     <p class="download-note">Android APK — install directly on your device. No Play Store required.</p>
     <div class="download-card">
       <h3>Ilowa v1.0.0</h3>
-      <p>Cultural SocialFi Radio for the Global South — Feb 2026</p>
+      <p>Cultural SocialFi Radio for the Global South — 2026</p>
       <a href="/ilowa.apk" class="btn btn-primary" download>
-        ⬇ Download APK
+        <i data-lucide="download" style="width:18px;height:18px"></i> Download APK
       </a>
       <div class="download-meta">
         Requires Android 8.0+ · ~50 MB · Solana Devnet
@@ -525,12 +592,19 @@
   <!-- ─── Footer ─── -->
   <footer>
     <div class="footer-links">
-      <a href="https://github.com/Udukuzi/Ilowav1.0.0" target="_blank" rel="noopener">GitHub</a>
-      <a href="#download">Download</a>
-      <a href="https://twitter.com/BantuBloom" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://x.com/BantuBloom" target="_blank" rel="noopener">
+        <i data-lucide="twitter"></i> Twitter / X
+      </a>
+      <a href="#download">
+        <i data-lucide="download"></i> Download
+      </a>
+      <a href="mailto:hello@ilowa.app">
+        <i data-lucide="mail"></i> Contact
+      </a>
     </div>
-    <p>BantuBloomNetwork 2026 © — Built with purpose for the Global South</p>
+    <p>BantuBloomNetwork © 2026 — Built with purpose for the Global South</p>
   </footer>
 
+  <script>lucide.createIcons();</script>
 </body>
 </html>
